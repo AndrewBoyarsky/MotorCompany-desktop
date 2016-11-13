@@ -6,6 +6,7 @@ import com.boyarskycompany.src.controllers.database.dauimpl.BaseDAUImpl;
 import com.boyarskycompany.src.controllers.entities.util.ClassUtil;
 import com.boyarskycompany.src.controllers.entities.util.RecordsIdsTuple;
 import com.boyarskycompany.src.controllers.entities.util.alerts.ConfirmationAlert;
+import com.boyarskycompany.src.controllers.entities.util.alerts.ErrorParsingAlert;
 import com.boyarskycompany.src.controllers.entities.util.alerts.WarningAlert;
 import com.boyarskycompany.src.run.Main;
 import javafx.beans.property.SimpleObjectProperty;
@@ -29,7 +30,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import jfxtras.scene.control.CalendarTextField;
 
@@ -811,7 +811,7 @@ public class EntityController<T> implements Initializable, Configurable {
 
     private void showEntity() {
         Scene scene = new Scene(root);
-        Stage stage = new Stage(StageStyle.DECORATED);
+        Stage stage = new Stage();
         stage.setTitle(Main.getResLan().getString(ClassUtil.getSimpleLowerCaseClassName(cl)));
         stage.getIcons().add(new Image("images/documentIcon.png"));
         stage.setScene(scene);
@@ -832,12 +832,7 @@ public class EntityController<T> implements Initializable, Configurable {
 
     protected <S> void shutDownParsing(Node field, Class fieldClass) {
         field.setStyle("-fx-border-color: red");
-        ResourceBundle res = Main.getResLan();
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setContentText(res.getString(fieldClass.getSimpleName() + "ErrorParsingText"));
-        alert.setTitle(res.getString("ErrorParsingTitle"));
-        alert.setHeaderText(res.getString(fieldClass.getSimpleName() + "ErrorParsingHeader"));
-        alert.show();
+        ErrorParsingAlert errorParsingAlert = new ErrorParsingAlert(fieldClass.getSimpleName() + "ErrorParsingText", fieldClass.getSimpleName() + "ErrorParsingHeader");
     }
 
     protected <V> ObservableList<Long> getListEntityID(Class<V> entityClass) {

@@ -1,6 +1,7 @@
 package com.boyarskycompany.src.controllers.entities.util.alerts;
 
-import javafx.stage.StageStyle;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 /**
  * Created by zandr on 17.10.2016.
@@ -8,7 +9,8 @@ import javafx.stage.StageStyle;
 public class ConfirmationAlert extends AbstractAlert {
     public ConfirmationAlert(String contentName) {
         super(AlertType.CONFIRMATION, contentName, "confirmationTitleText", "confirmationHeaderText");
-        initStyle(StageStyle.UTILITY);
+        ((Stage) getDialogPane().getScene().getWindow()).getIcons().add(new Image("images/confirmIcon.png"));
+
     }
 
     public ConfirmationAlert() {

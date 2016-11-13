@@ -5,8 +5,10 @@ import com.boyarskycompany.src.entities.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -38,27 +40,65 @@ public class ReportController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		agreementReportButton.setOnAction(e -> {
-			new BaseDAUImpl<AgreementEntity>(AgreementEntity.class).createReportViaConnection("/reports/agreement/AgreementReport.jrxml");
+			try {
+				new BaseDAUImpl<AgreementEntity>(AgreementEntity.class).createReportViaConnection("/reports/agreement/AgreementReport.jrxml");
+			}
+			catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		});
 		waybillReportButton.setOnAction(e -> {
-			new BaseDAUImpl<WaybillEntity>(WaybillEntity.class).createReportViaConnection("/reports/waybill/WaybillReport.jrxml");
+			try {
+				new BaseDAUImpl<WaybillEntity>(WaybillEntity.class).createReportViaConnection("/reports/waybill/WaybillReport.jrxml");
+			}
+			catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		});
 		bidReportButton.setOnAction(e -> {
-			new BaseDAUImpl<BidEntity>(BidEntity.class).createReportViaConnection("/reports/bid/BidReport.jrxml");
+			try {
+				new BaseDAUImpl<BidEntity>(BidEntity.class).createReportViaConnection("/reports/bid/BidReport.jrxml");
+			}
+			catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		});
 		transportReportButton.setOnAction(e -> {
-			new BaseDAUImpl<TransportEntity>(TransportEntity.class).createReportViaConnection("/reports/transport/TransportReport.jrxml");
+			try {
+				new BaseDAUImpl<TransportEntity>(TransportEntity.class).createReportViaConnection("/reports/transport/TransportReport.jrxml");
+			}
+			catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		});
 		roadListReportButton.setOnAction(e -> {
-			new BaseDAUImpl<RoadlistEntity>(RoadlistEntity.class).createReportViaConnection("/reports/roadlist/RoadlistReport.jrxml");
+			try {
+				new BaseDAUImpl<RoadlistEntity>(RoadlistEntity.class).createReportViaConnection("/reports/roadlist/RoadlistReport.jrxml");
+			}
+			catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		});
 		totalBillReportButton.setOnAction(e -> {
-			new BaseDAUImpl<TotalbillEntity>(TotalbillEntity.class).createReportViaConnection("/reports/totalbill/TotalbillReport.jrxml");
+			try {
+				new BaseDAUImpl<TotalbillEntity>(TotalbillEntity.class).createReportViaConnection("/reports/totalbill/TotalbillReport.jrxml");
+			}
+			catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		});
 		closeButton.setOnAction(event -> {
 			((Stage) closeButton.getScene().getWindow()).close();
 		});
+		closeButton.setGraphic(new ImageView("images/closeIcon.png"));
+		bidReportButton.setGraphic(new ImageView("images/createBidReportIcon.png"));
+		agreementReportButton.setGraphic(new ImageView("images/createAgreementReportIcon.png"));
+		totalBillReportButton.setGraphic(new ImageView("images/createTotalBillReportIcon.png"));
+		waybillReportButton.setGraphic(new ImageView("images/createWaybillReportIcon.png"));
+		transportReportButton.setGraphic(new ImageView("images/createTransportReportIcon.png"));
+		roadListReportButton.setGraphic(new ImageView("images/createRoadListReportIcon.png"));
 	}
+
 }
    
     

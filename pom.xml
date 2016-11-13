@@ -7,7 +7,7 @@
     <groupId>com.boyarskycompany</groupId>
     <artifactId>MCWeb</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>MCWeb</name>
+    <name>MCIS</name>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -96,10 +96,9 @@
                     </goals>
                     <configuration>
                         <headerType>gui</headerType>
-                        <icon>images/mainIcon.png</icon>
-                        <outfile>target/ATPInformationSystem.exe</outfile>
-                        <jar>target/MCWeb-1.0-SNAPSHOT.jar
-                        </jar> <!-- 'shaded' is the value set on shadedClassifierName above -->
+                        <icon>mainIcon.ico</icon>
+                        <outfile>target/MotorCompanyInformationSystem.exe</outfile>
+                        <jar>target/MCIS-1.0-SNAPSHOT.jar</jar>
                         <classPath>
                             <mainClass>com.boyarskycompany.src.run.Main</mainClass>
                         </classPath>
@@ -111,13 +110,13 @@
                         <versionInfo>
                             <fileVersion>1.0.0.0</fileVersion>
                             <txtFileVersion>1.0.0.0</txtFileVersion>
-                            <fileDescription>ATP Infprmation System</fileDescription>
+                            <fileDescription>MC Information System</fileDescription>
                             <copyright>C</copyright>
                             <productVersion>1.0.0.0</productVersion>
                             <txtProductVersion>1.0.0.0</txtProductVersion>
-                            <productName>Product</productName>
-                            <internalName>Product</internalName>
-                            <originalFilename>App.exe</originalFilename>
+                            <productName>MC Information System</productName>
+                            <internalName>MCIS</internalName>
+                            <originalFilename>MCIS.exe</originalFilename>
                         </versionInfo>
                     </configuration>
                 </execution>

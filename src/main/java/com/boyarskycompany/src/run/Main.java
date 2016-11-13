@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.util.*;
 
@@ -53,14 +52,24 @@ public class Main extends Application {
         launch(args);
     }
 
-    private static void chooseLanguage() {
+    public static void chooseLanguage() {
         ArrayList<String> listOfLanguages = new ArrayList<>(Arrays.asList("Русский", "Українська", "English"));
         ChoiceDialog<String> languageChooser = new ChoiceDialog<>("English", listOfLanguages);
-        languageChooser.setContentText("Choose language\n" +
-                " Выберите язык \n" +
-                " Оберіть мову");
-        languageChooser.setTitle("Choose the language of the application");
-        languageChooser.initStyle(StageStyle.UTILITY);
+        ((Stage) languageChooser.getDialogPane().getScene().getWindow()).getIcons().add(new Image("images/languageIcon.png"));
+        Locale defaultLocale = Locale.getDefault();
+        ResourceBundle defaultRes = null;
+        if (resLan != null) {
+            defaultRes = resLan;
+        } else if (defaultLocale.getLanguage().equalsIgnoreCase("ru")) {
+            defaultRes = ResourceBundle.getBundle("internationalization/languages", CharsetControl.RUS);
+        } else if (defaultLocale.getLanguage().equalsIgnoreCase("ua")) {
+            defaultRes = ResourceBundle.getBundle("internationalization/languages_uk", CharsetControl.UA);
+        } else {
+            defaultRes = ResourceBundle.getBundle("internationalization/languages", CharsetControl.ENG);
+        }
+        languageChooser.setContentText(defaultRes.getString("chooseLanguageText"));
+        languageChooser.setTitle(defaultRes.getString("chooseLanguageTitle"));
+        languageChooser.setHeaderText(defaultRes.getString("chooseLanguageHeader"));
         Optional<String> result = languageChooser.showAndWait();
         result.ifPresent(language -> {
             if (language.equals("Русский")) {
@@ -68,7 +77,7 @@ public class Main extends Application {
             } else if (language.equals("Українська")) {
                 setResLan(ResourceBundle.getBundle("internationalization/languages_uk", CharsetControl.UA));
             } else if (language.equals("English")) {
-                setResLan(ResourceBundle.getBundle("internationalization/languages", new Locale("en")));
+                setResLan(ResourceBundle.getBundle("internationalization/languages", CharsetControl.ENG));
             }
         });
     }

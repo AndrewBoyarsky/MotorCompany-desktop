@@ -1,17 +1,19 @@
 package com.boyarskycompany.src.controllers;
 
 import com.boyarskycompany.src.controllers.entities.util.alerts.ConfirmationAlert;
+import com.boyarskycompany.src.controllers.entities.util.alerts.ErrorParsingAlert;
 import com.boyarskycompany.src.controllers.entities.util.alerts.WarningAlert;
 import com.boyarskycompany.src.privacy.UserBean;
 import com.boyarskycompany.src.privacy.Users;
-import com.boyarskycompany.src.run.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -48,15 +50,15 @@ public class UserController implements Initializable {
 
     @FXML
     private TextArea currentUserArea;
-
+    private UserBean currentUser;
     private boolean isUnique(String userName) {
         List<UserBean> list = userTable.getItems();
         ArrayList<String> userNameList = new ArrayList<String>();
         list.forEach(userBean -> userNameList.add(userBean.getUserName()));
         if (userNameList.contains(userName)) {
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-            errorAlert.setContentText(Main.getResLan().getString("errorUniqueUserName"));
-            errorAlert.show();
+            return false;
+        }
+        if (currentUser.getUserName().equals(userName)) {
             return false;
         }
         return true;
@@ -71,6 +73,7 @@ public class UserController implements Initializable {
         userPasswordColumn.setCellValueFactory(new PropertyValueFactory<UserBean, String>("userPassword"));
         userPasswordColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         userTable.getItems().setAll(Users.getAllUsers());
+        currentUser = getCurrentUser();
 
         userNameColumn.setOnEditCommit(event -> {
             if (isUnique(event.getNewValue())) {
@@ -104,6 +107,7 @@ public class UserController implements Initializable {
                 UserBean userBean = userTable.getSelectionModel().getSelectedItem();
                 if (userBean != null) {
                     WarningAlert warningAlert = new WarningAlert("warningDeleteUser");
+                    ((Stage) warningAlert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("images/warningIcon.png"));
                     if (warningAlert.showAndWait().get().getButtonData() == ButtonBar.ButtonData.YES) {
                         Users.deleteUser(userBean);
                     }
@@ -112,24 +116,40 @@ public class UserController implements Initializable {
         });
 
         addUserButton.setOnAction(e -> {
-            if (userTextField.getText().isEmpty() || passwordTextField.getText().isEmpty() || privilegesComboBox.getValue().isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                ResourceBundle res = Main.getResLan();
-                alert.setContentText(res.getString("StringErrorParsingText"));
-                alert.setTitle(res.getString("ErrorParsingTitle"));
-                alert.setHeaderText(res.getString("StringErrorParsingHeader"));
-                alert.show();
-            } else if (isUnique(userTextField.getText())) {
-                ConfirmationAlert confirmationAlert = new ConfirmationAlert("confirmAddNewUser");
-                if (confirmationAlert.showAndWait().get().getButtonData() == ButtonBar.ButtonData.YES) {
+            if (!isUnique(userTextField.getText())) {
+                userTextField.setStyle("-fx-border-color: red");
+                ErrorParsingAlert errorParsingAlert = new ErrorParsingAlert("errorUniqueUserName", "StringErrorParsingHeader");
+            } else {
+                if (userTextField.getText().isEmpty()) {
+                    userTextField.setStyle("-fx-border-color: red");
+                    passwordTextField.setStyle("-fx-border-color: lightgray");
+                    privilegesComboBox.setStyle("-fx-border-color: lightgray");
+                    ErrorParsingAlert errorParsingAlert = new ErrorParsingAlert("StringErrorParsingText", "StringErrorParsingHeader");
+                } else if (passwordTextField.getText().isEmpty()) {
+                    userTextField.setStyle("-fx-border-color: greenyellow");
+                    passwordTextField.setStyle("-fx-border-color: red");
+                    privilegesComboBox.setStyle("-fx-border-color: lightgray");
+                    ErrorParsingAlert errorParsingAlert = new ErrorParsingAlert("StringErrorParsingText", "StringErrorParsingHeader");
+                } else {
+                    privilegesComboBox.setStyle("-fx-border-color: greenyellow");
+                    passwordTextField.setStyle("-fx-border-color: greenyellow");
+                    userTextField.setStyle("-fx-border-color: greenyellow");
 
-                    UserBean user = new UserBean(userTextField.getText(), passwordTextField.getText(), privilegesComboBox.getValue());
-                    userTable.getItems().add(user);
-                    Users.addnewUser(user);
+                    ConfirmationAlert confirmationAlert = new ConfirmationAlert("confirmAddNewUser");
+                    if (confirmationAlert.showAndWait().get().getButtonData() == ButtonBar.ButtonData.YES) {
+                        UserBean user = new UserBean(userTextField.getText(), passwordTextField.getText(), privilegesComboBox.getValue());
+                        userTable.getItems().add(user);
+                        Users.addnewUser(user);
+                        privilegesComboBox.setStyle("-fx-border-color: lightgray");
+                        passwordTextField.setStyle("-fx-border-color: lightgray");
+                        userTextField.setStyle("-fx-border-color: lightgray");
+                        passwordTextField.clear();
+                        userTextField.clear();
+                        privilegesComboBox.setValue("User");
+                    }
                 }
             }
         });
-        UserBean currentUser = getCurrentUser();
         userTable.getItems().remove(currentUser);
         currentUserArea.setText(resources.getString("currentUserText") + "\n" + resources.getString("userLabel")
                 + ": " + currentUser.getUserName() + "\n" + resources.getString("passwordLabel") + ": " + currentUser.getUserPassword() +

@@ -71,27 +71,26 @@ public class LoadController implements Initializable {
                 loadProgress.setStyle("-fx-accent: forestgreen;");
             }
         });
-        loadProgress.progressProperty().addListener(changeListener -> {
-            Thread thread = new Thread(new Task<Void>() {
+            Thread dotThread = new Thread(new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
                     changeSign(loadProgress.getProgress());
                     return null;
                 }
-            });
-            thread.setDaemon(true);
-            thread.start();
+
         });
         stage.setTitle(getResLan().getString("loadingTitle"));
         stage.show();
         final Thread thread = new Thread(task, "task-thread");
         thread.setDaemon(true);
         thread.start();
+        dotThread.setDaemon(true);
+        dotThread.start();
 //        changeLanguage();
     }
 
     private void changeSign(double d) {
-        if (d % 5.0 == 0.0)
+        if (d % 7.0 == 0.0)
             loadDots.setText("");
         else
             loadDots.setText(new String(loadDots.getText() + " ."));

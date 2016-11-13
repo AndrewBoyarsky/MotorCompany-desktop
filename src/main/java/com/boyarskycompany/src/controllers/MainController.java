@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -248,6 +249,14 @@ public class MainController implements Initializable {
         Main.getPrStg().setOnCloseRequest(e -> {
             handleCloseButton();
         });
-
+//        reportButton.setContentDisplay(ContentDisplay.LEFT);
+        reportButton.setGraphic(new ImageView("images/createReportIcon.png"));
+//        createNewDocumentButton.setContentDisplay(ContentDisplay.LEFT);
+        createNewDocumentButton.setGraphic(new ImageView("images/createNewDocumentIcon.png"));
+//        reloginButton.setContentDisplay(ContentDisplay.LEFT);
+        reloginButton.setGraphic(new ImageView("images/reloginIcon.png"));
+//        closeButton.setContentDisplay(ContentDisplay.LEFT);
+        closeButton.setGraphic(new ImageView("images/closeIcon.png"));
+//        closeButton.setStyle("-fx-background-position: left; -fx-background-image: url('images/docIcon.png')");
     }
 }

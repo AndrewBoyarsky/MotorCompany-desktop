@@ -7,8 +7,10 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.boyarskycompany.src.controllers.MainController">
+<BorderPane fx:id="root" prefHeight="574.0" prefWidth="260.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.boyarskycompany.src.controllers.MainController">
    <top>
       <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
         <menus>
@@ -33,27 +35,36 @@
    </top>
    <center>
       <BorderPane BorderPane.alignment="CENTER">
-         <top>
-            <Button fx:id="createNewDocumentButton" mnemonicParsing="false" onAction="#handleCreateNewDocumentClick" prefHeight="73.0" prefWidth="174.0" text="%createNewDocumentButton" BorderPane.alignment="CENTER" />
-         </top>
          <bottom>
-            <BorderPane BorderPane.alignment="CENTER">
-               <center>
-                  <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseButton" prefHeight="71.0" prefWidth="176.0" text="%closeButton" />
-               </center>
-               <top>
-                  <Button fx:id="reportButton" mnemonicParsing="false" onAction="#handleReportButtonClick" prefHeight="70.0" prefWidth="175.0" text="%reportButton" BorderPane.alignment="CENTER" />
-               </top>
-            </BorderPane>
+            <BorderPane BorderPane.alignment="CENTER" />
          </bottom>
+         <top>
+            <Clock autoNightMode="true" design="DB" discreteSecond="true" nightMode="true" running="true" secondPointerVisible="true" BorderPane.alignment="CENTER" />
+         </top>
          <center>
-            <Button fx:id="reloginButton" mnemonicParsing="false" onAction="#handleReloginButtonClick" prefHeight="69.0" prefWidth="178.0" text="%reloginButton" BorderPane.alignment="CENTER" />
+            <VBox alignment="TOP_CENTER" prefHeight="150.0" prefWidth="260.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="createNewDocumentButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleCreateNewDocumentClick" prefHeight="25.0" prefWidth="250.0" text="%createNewDocumentButton" textOverrun="CLIP">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font></Button>
+                  <Button fx:id="reportButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleReportButtonClick" prefHeight="25.0" prefWidth="250.0" text="%reportButton">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font></Button>
+                  <Button fx:id="reloginButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleReloginButtonClick" prefHeight="25.0" prefWidth="250.0" text="%reloginButton" textOverrun="CLIP">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font></Button>
+                  <Button fx:id="closeButton" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#handleCloseButton" prefHeight="25.0" prefWidth="250.0" text="%closeButton">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font></Button>
+               </children>
+            </VBox>
          </center>
       </BorderPane>
    </center>
-   <right>
-      <Clock autoNightMode="true" design="DB" discreteSecond="true" nightMode="true" running="true" secondPointerVisible="true" BorderPane.alignment="CENTER" />
-   </right>
    <bottom>
       <TextField fx:id="sessionTime" editable="false" BorderPane.alignment="CENTER" />
    </bottom>
