@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2016-11-06T12:55:54 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BillReport" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c72f96d9-38c2-435f-af49-97a4a2b29c57">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="687"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Times New Roman" fontSize="18" isBold="false"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="PieChartDataset" uuid="39581794-7f4c-48d6-8f6a-b421776f515c"/>
+	<queryString>
+		<![CDATA[select * from roadlist, providedservice, driverjob where roadlist.IdRoadList = providedservice.IdRoadList And driverjob.IdRoadList = roadlist.IdRoadlist]]>
+	</queryString>
+	<field name="IdRoadList" class="java.lang.Long"/>
+	<field name="TotalHours" class="java.lang.Double"/>
+	<field name="Dispatcher" class="java.lang.String"/>
+	<field name="Mechanic" class="java.lang.String"/>
+	<field name="ArrivalActualTime" class="java.sql.Timestamp"/>
+	<field name="ZeroMileage" class="java.lang.Double"/>
+	<field name="SpeedometrIndicate" class="java.lang.Double"/>
+	<field name="FuelMark" class="java.lang.String"/>
+	<field name="FuelIssued" class="java.lang.Double"/>
+	<field name="ArrivalFuelBalance" class="java.lang.Double"/>
+	<field name="DepartureFuelBalance" class="java.lang.Double"/>
+	<field name="TotalTons" class="java.lang.Double"/>
+	<field name="TotalTrips" class="java.lang.Integer"/>
+	<field name="IdVariableDayPlan" class="java.lang.Long"/>
+	<field name="IdTranspMap" class="java.lang.Long"/>
+	<field name="IdDriver" class="java.lang.Long"/>
+	<field name="IdProvidedService" class="java.lang.Long"/>
+	<field name="DenominationService" class="java.lang.String"/>
+	<field name="NumberTonsPerKilometer" class="java.lang.Double"/>
+	<field name="PrizePerTonPerKilometer" class="java.lang.Double"/>
+	<field name="Total" class="java.lang.Double"/>
+	<field name="COLUMN_22" class="java.lang.Long"/>
+	<field name="COLUMN_23" class="java.lang.Long"/>
+	<field name="COLUMN_24" class="java.lang.Long"/>
+	<field name="COLUMN_25" class="java.lang.Long"/>
+	<field name="IdDriverJob" class="java.lang.Long"/>
+	<field name="ArrivalTime" class="java.sql.Timestamp"/>
+	<field name="DepartureTime" class="java.sql.Timestamp"/>
+	<field name="NumberHours" class="java.lang.Integer"/>
+	<field name="WhereGetCargo" class="java.lang.String"/>
+	<field name="WhereDeliverCargo" class="java.lang.String"/>
+	<field name="Denomination" class="java.lang.String"/>
+	<field name="NumberTrips" class="java.lang.Integer"/>
+	<field name="Distance" class="java.lang.Double"/>
+	<field name="TonsTransported" class="java.lang.Double"/>
+	<field name="COLUMN_36" class="java.lang.Long"/>
+	<field name="COLUMN_37" class="java.lang.Long"/>
+	<field name="COLUMN_38" class="java.lang.Long"/>
+	<field name="COLUMN_39" class="java.lang.Long"/>
+	<variable name="CurrentPage" class="java.lang.Integer" resetType="Page" incrementType="Page">
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<group name="Group1">
+		<groupExpression><![CDATA[$F{IdRoadList}]]></groupExpression>
+		<groupHeader>
+			<band height="80">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<frame>
+					<reportElement mode="Opaque" x="0" y="0" width="555" height="40" backcolor="#D4C042" uuid="f98ce834-703e-4736-86ea-e51f0b0ceae9">
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<staticText>
+						<reportElement x="0" y="0" width="72" height="40" uuid="f71b47cc-d432-4f8a-9a21-0f47502f79e2"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<text><![CDATA[Id road list]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="72" y="0" width="69" height="40" uuid="07a2e5df-7c66-4e5a-92b6-bdf0ac0e16a8"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<text><![CDATA[Departure fuel]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="141" y="0" width="69" height="40" uuid="b620a56c-6796-41dc-965f-405055a4378f"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<text><![CDATA[Arrival fuel]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="210" y="0" width="69" height="40" uuid="361fbcb0-5219-4dc6-990a-fd014069bf7f"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<text><![CDATA[Arrival time]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="279" y="0" width="69" height="40" uuid="f105c58d-16ae-4ab9-8c2f-3f911a5451d4"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<text><![CDATA[Zero mileage]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="348" y="0" width="69" height="40" uuid="85f8ab1a-2257-4882-9292-3bb0b9283670"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<text><![CDATA[Total tonns]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="417" y="0" width="69" height="40" uuid="d99f1018-1047-4981-b1cb-1c53398f5885"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<text><![CDATA[Total hours]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="486" y="0" width="69" height="40" uuid="c356c183-dc87-4b22-a3d8-f1b6ee50d690"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<text><![CDATA[Total trips]]></text>
+					</staticText>
+				</frame>
+				<frame>
+					<reportElement mode="Opaque" x="0" y="40" width="555" height="40" backcolor="#C7504E" uuid="c24bdccb-19b3-4abd-aaa5-8304c6d4302f">
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textField>
+						<reportElement x="0" y="0" width="72" height="40" uuid="9f67317f-4ee7-420b-b57f-163443f4ef93"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{IdRoadList}]]></textFieldExpression>
+					</textField>
+					<textField pattern="#,##0 L">
+						<reportElement x="72" y="0" width="69" height="40" uuid="08e1fa47-d981-491e-8bd9-40c89480156f"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{DepartureFuelBalance}]]></textFieldExpression>
+					</textField>
+					<textField pattern="#,##0 L">
+						<reportElement x="141" y="0" width="69" height="40" uuid="a500052e-5590-4437-9529-1384593a12be"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{ArrivalFuelBalance}]]></textFieldExpression>
+					</textField>
+					<textField pattern="dd.MM hh:mm">
+						<reportElement x="210" y="0" width="69" height="40" uuid="2a524065-95dc-4629-bcb3-352410f89433"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{ArrivalActualTime}]]></textFieldExpression>
+					</textField>
+					<textField>
+						<reportElement x="279" y="0" width="69" height="40" uuid="15171ab4-ee8d-4f19-8bcf-57f153af3657"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{ZeroMileage}]]></textFieldExpression>
+					</textField>
+					<textField>
+						<reportElement x="348" y="0" width="69" height="40" uuid="7b70f7df-bfa5-4846-8a52-3f9ceb8aeff5"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{TotalTons}]]></textFieldExpression>
+					</textField>
+					<textField>
+						<reportElement x="417" y="0" width="69" height="40" uuid="eb82ffa8-53e1-4bc5-91c3-51b68a4a97a2"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{TotalHours}]]></textFieldExpression>
+					</textField>
+					<textField>
+						<reportElement x="486" y="0" width="69" height="40" uuid="00f0feaa-ea85-45aa-b427-07c87511b4cf"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="14"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{TotalTrips}]]></textFieldExpression>
+					</textField>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<group name="Group2">
+		<groupHeader>
+			<band height="25">
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<frame>
+					<reportElement mode="Opaque" x="0" y="0" width="555" height="25" backcolor="#7BB386" uuid="fd751ebc-14e1-4833-8898-f6894da86d20">
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+					</reportElement>
+					<staticText>
+						<reportElement x="0" y="0" width="67" height="25" uuid="4b041dee-0a5c-4dc8-88e4-2e711d9f0b30"/>
+						<text><![CDATA[Tonns ]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="67" y="0" width="61" height="25" uuid="4eb7fbd2-7692-46ee-869a-a50bdea291d6"/>
+						<text><![CDATA[Distance]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="128" y="0" width="61" height="25" uuid="20dbe6fc-f69e-4934-b3c1-0986fd6e67d4"/>
+						<text><![CDATA[T/Km]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="189" y="0" width="61" height="25" uuid="e1e9b7fd-f9b0-404d-a938-4c7876c03e95"/>
+						<text><![CDATA[Prize t/Km]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="250" y="0" width="61" height="25" uuid="2d489e63-688f-4ceb-b55a-336a5c530611"/>
+						<text><![CDATA[Consignor]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="311" y="0" width="61" height="25" uuid="0a7f394c-448d-4e18-9c74-78084e511c1e"/>
+						<text><![CDATA[Consignee]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="372" y="0" width="61" height="25" uuid="85ab22f1-35dd-4e49-8756-5195d35bd778"/>
+						<text><![CDATA[Departure]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="433" y="0" width="61" height="25" uuid="d1b3b3a7-90d6-494a-8e47-f6da5866498c"/>
+						<text><![CDATA[Arrival]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="494" y="0" width="61" height="25" uuid="9eccba5e-4141-4039-b96f-46add028ef9b"/>
+						<text><![CDATA[Trips]]></text>
+					</staticText>
+				</frame>
+			</band>
+		</groupHeader>
+	</group>
+	<title>
+		<band height="96" splitType="Stretch">
+			<staticText>
+				<reportElement style="SubTitle" x="336" y="65" width="217" height="29" uuid="7a8ee983-690c-4f4d-9330-42613bd3d628"/>
+				<textElement textAlignment="Right">
+					<font size="22" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Created by ATP IS]]></text>
+			</staticText>
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="65" forecolor="#006699" backcolor="#006699" uuid="29f958b3-9df5-4ee0-905e-9fd33029926f"/>
+				<staticText>
+					<reportElement style="Title" x="110" y="0" width="443" height="65" uuid="cf1fabd8-9376-4a95-a65d-c762a7404011"/>
+					<textElement textAlignment="Right">
+						<font size="54" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Road list Report]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="25" backcolor="#EFB67A" uuid="5d40aaf2-3dc0-4640-aa64-ed2bc968a08d">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+				</reportElement>
+				<textField>
+					<reportElement x="0" y="0" width="67" height="25" uuid="9f0e276a-9095-43d6-a2b1-798eb7f4e1cb"/>
+					<textFieldExpression><![CDATA[$F{TonsTransported}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="67" y="0" width="61" height="25" uuid="588eda95-a9da-43c2-b067-171873fd973a"/>
+					<textFieldExpression><![CDATA[$F{Distance}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="128" y="0" width="61" height="25" uuid="5fea9889-1de4-4328-a328-339a7f8d5744"/>
+					<textFieldExpression><![CDATA[$F{NumberTonsPerKilometer}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="189" y="0" width="61" height="25" uuid="d4e25b35-1a18-4309-868c-f50800741a86"/>
+					<textFieldExpression><![CDATA[$F{PrizePerTonPerKilometer}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="250" y="0" width="61" height="25" uuid="47eb4314-c90e-4326-ab16-06ce30733c76"/>
+					<textFieldExpression><![CDATA[$F{WhereGetCargo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="311" y="0" width="61" height="25" uuid="4359c33c-a7fb-4f9f-8b08-e40db19f3a24"/>
+					<textFieldExpression><![CDATA[$F{WhereDeliverCargo}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd.MM hh:mm">
+					<reportElement x="372" y="0" width="61" height="25" uuid="ef870053-93c5-410e-bea8-b829cadefcb0"/>
+					<textFieldExpression><![CDATA[$F{DepartureTime}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd.MM hh:mm">
+					<reportElement x="433" y="0" width="61" height="25" uuid="abd93e27-8240-4d23-8c46-807b394a6d78"/>
+					<textFieldExpression><![CDATA[$F{ArrivalTime}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="494" y="0" width="61" height="25" uuid="af4f4859-0ef9-4245-9c07-9fd8e3e77fb8"/>
+					<textFieldExpression><![CDATA[$F{NumberTrips}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="7" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="0a05d19c-77ff-48d5-91d6-460d221419e5"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="13" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="2" y="0" width="555" height="13" forecolor="#D0B48E" backcolor="#006699" uuid="21b8ec89-3912-4f38-b1d2-846c348d496b"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="513" y="0" width="40" height="13" forecolor="#FFFFFF" uuid="2f1f4647-386f-4ee9-b3b1-779c70fd7960"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="433" y="0" width="80" height="13" forecolor="#FFFFFF" uuid="c50a7647-9d9b-4145-89d7-15adb353fac4"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd.MM.yyyy hh:mm">
+					<reportElement style="SubTitle" x="2" y="0" width="197" height="13" forecolor="#FFFFFF" uuid="2a75ce15-0152-4154-9a45-a23c6a9d3107"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+						<paragraph lineSpacing="AtLeast"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

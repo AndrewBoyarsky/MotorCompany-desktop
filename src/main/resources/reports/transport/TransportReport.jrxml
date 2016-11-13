@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2016-11-06T00:12:36 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BillReport" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c72f96d9-38c2-435f-af49-97a4a2b29c57">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="687"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Times New Roman" fontSize="18" isBold="false"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="PieChartDataset" uuid="39581794-7f4c-48d6-8f6a-b421776f515c"/>
+	<queryString>
+		<![CDATA[select * from transport;]]>
+	</queryString>
+	<field name="IdTransport" class="java.lang.Long"/>
+	<field name="Type" class="java.lang.String"/>
+	<field name="Mark" class="java.lang.String"/>
+	<field name="Model" class="java.lang.String"/>
+	<field name="Carrying" class="java.lang.Double"/>
+	<field name="FuelCost" class="java.lang.Double"/>
+	<field name="IssueYear" class="java.lang.Integer"/>
+	<field name="ComissioningDate" class="java.sql.Date"/>
+	<field name="Mileage" class="java.lang.Integer"/>
+	<field name="InventoryNumber" class="java.lang.String"/>
+	<field name="DateLastMajorOverhaul" class="java.sql.Date"/>
+	<field name="MileageSinceLastMajorOverhaul" class="java.lang.Integer"/>
+	<field name="Cost" class="java.lang.Double"/>
+	<field name="ResidualValue" class="java.lang.Double"/>
+	<field name="Demolition" class="java.lang.Double"/>
+	<field name="IsUsing" class="java.lang.Boolean"/>
+	<variable name="CurrentPage" class="java.lang.Integer" resetType="Page" incrementType="Page">
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<variable name="sumPrice" class="java.lang.Double" resetType="Group" resetGroup="Group3" calculation="Sum">
+		<variableExpression><![CDATA[$F{Cost}]]></variableExpression>
+	</variable>
+	<variable name="COUNT_TRANSPORT" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{IdTransport}]]></variableExpression>
+	</variable>
+	<variable name="AVG_DEMOLITION" class="java.lang.Double" calculation="Average">
+		<variableExpression><![CDATA[$F{Demolition}]]></variableExpression>
+	</variable>
+	<variable name="AVG_MILEAGE" class="java.lang.Integer" calculation="Average">
+		<variableExpression><![CDATA[$F{Mileage}]]></variableExpression>
+	</variable>
+	<variable name="AVG_FUELCOST" class="java.lang.Double" calculation="Average">
+		<variableExpression><![CDATA[$F{FuelCost}]]></variableExpression>
+	</variable>
+	<variable name="Average year of issue transport" class="java.lang.Integer" calculation="Average">
+		<variableExpression><![CDATA[$F{IssueYear}]]></variableExpression>
+	</variable>
+	<group name="Group3">
+		<groupExpression><![CDATA[$F{IsUsing}]]></groupExpression>
+		<groupHeader>
+			<band height="47">
+				<rectangle>
+					<reportElement positionType="Float" x="2" y="1" width="555" height="45" forecolor="#DE201D" backcolor="#BF3F28" uuid="502721d4-9d47-4d31-8066-0e2cfeb16b7d">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+				</rectangle>
+				<textField>
+					<reportElement x="283" y="0" width="291" height="47" uuid="900eba60-8d2d-4560-a7d7-01bd61db7963"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{IsUsing}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="0" width="283" height="47" uuid="938488f9-7f48-44f6-8291-81bc18f3256d"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="16"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Busy status"]]></textFieldExpression>
+				</textField>
+			</band>
+			<band height="31">
+				<rectangle>
+					<reportElement mode="Opaque" x="2" y="0" width="555" height="29" backcolor="#21CF3B" uuid="898f1e77-1759-450a-a2c8-1c93f596c1b7"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="4" y="0" width="65" height="30" uuid="b35ee768-6adb-44cb-8cdc-e23d028ae3af"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Id transport]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="70" y="0" width="50" height="30" uuid="11e6321e-6fae-4292-bd68-a4a0d4127459"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Type]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="120" y="-1" width="50" height="30" uuid="6bdc815c-1f45-4754-bd12-a88d83e80cdf"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Mark]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="170" y="-1" width="54" height="30" uuid="f2f2aedf-c944-407c-a605-fee0d717dd42"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Model]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="227" y="-1" width="56" height="30" uuid="eb5ea56f-f9cc-4c7a-afa4-6cb15fa3d215"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Carrying]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="285" y="-1" width="64" height="31" uuid="ab51ae3f-e955-4e82-b3f5-94de13e75f2b"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Fuel cost L/100km]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="349" y="0" width="60" height="30" uuid="9b9d6cd0-6ac4-4ee9-8b89-eb0fd16e9f99"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Issue year]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="410" y="-1" width="80" height="30" uuid="135ee8ac-e98a-40e6-9495-07130beabc3b"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Mileage]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="490" y="0" width="64" height="30" uuid="66a42f58-3c25-4f42-839e-eae008fb389c"/>
+					<textElement>
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Demolition]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="48">
+				<frame>
+					<reportElement mode="Opaque" x="2" y="0" width="555" height="47" backcolor="#FFA600" uuid="8103725c-00c5-47ff-b004-cbf0fa5b4792">
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+					</reportElement>
+					<staticText>
+						<reportElement positionType="Float" x="0" y="0" width="278" height="47" uuid="dd977274-3e43-4bbd-aa9a-797f8d90602d"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+							<font fontName="Times New Roman" size="16"/>
+						</textElement>
+						<text><![CDATA[Total cost]]></text>
+					</staticText>
+					<textField evaluationTime="Group" evaluationGroup="Group3" pattern="₴ #,##0">
+						<reportElement style="SubTitle" positionType="FixRelativeToBottom" isPrintRepeatedValues="false" x="278" y="0" width="277" height="47" printWhenGroupChanges="Group3" uuid="0620a59c-4149-44c2-ae84-27edb89cbbcb"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+							<font fontName="Times New Roman" size="22" isBold="true"/>
+							<paragraph lineSpacing="Proportional"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{sumPrice}]]></textFieldExpression>
+					</textField>
+				</frame>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="106" splitType="Stretch">
+			<staticText>
+				<reportElement style="SubTitle" x="336" y="65" width="217" height="29" uuid="7a8ee983-690c-4f4d-9330-42613bd3d628"/>
+				<textElement textAlignment="Right">
+					<font size="22" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Created by ATP IS]]></text>
+			</staticText>
+			<frame>
+				<reportElement mode="Opaque" x="2" y="0" width="555" height="65" forecolor="#006699" backcolor="#006699" uuid="29f958b3-9df5-4ee0-905e-9fd33029926f"/>
+				<staticText>
+					<reportElement style="Title" x="110" y="0" width="441" height="65" uuid="cf1fabd8-9376-4a95-a65d-c762a7404011"/>
+					<textElement textAlignment="Right">
+						<font size="54" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Transport Report]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<detail>
+		<band height="40" splitType="Stretch">
+			<rectangle>
+				<reportElement x="2" y="0" width="555" height="40" forecolor="#4A5091" backcolor="#243287" uuid="f032d77e-33aa-401b-9606-f2165cd3ff64"/>
+			</rectangle>
+			<textField>
+				<reportElement x="4" y="10" width="65" height="30" forecolor="#FFFFFF" uuid="f240a936-1cb2-4e4e-b0ff-119aa0e73438"/>
+				<textFieldExpression><![CDATA[$F{IdTransport}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="10" width="50" height="30" forecolor="#FFFFFF" uuid="64dc27c6-48ed-4320-897f-f80574d6d5b9"/>
+				<textFieldExpression><![CDATA[$F{Type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="10" width="50" height="30" forecolor="#FFFFFF" uuid="8eb597a1-cbf8-4cf0-a8cf-04223525d241"/>
+				<textFieldExpression><![CDATA[$F{Mark}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="10" width="54" height="30" forecolor="#FFFFFF" uuid="f120a825-9959-4c7b-8cfe-02ce7c417e6d"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Model}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="229" y="10" width="56" height="30" forecolor="#FFFFFF" uuid="88c0418d-9cc7-4c27-9913-5c24fa38743f"/>
+				<textFieldExpression><![CDATA[$F{Carrying}]]></textFieldExpression>
+			</textField>
+			<textField pattern="00.00 ">
+				<reportElement x="288" y="10" width="59" height="30" forecolor="#FFFFFF" uuid="f3a782b8-46c2-4d99-909d-411dfd400a59"/>
+				<textFieldExpression><![CDATA[$F{FuelCost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0000 year">
+				<reportElement x="349" y="10" width="60" height="30" forecolor="#FFFFFF" uuid="11be306f-6e43-460c-b10c-6d456be1ea01"/>
+				<textFieldExpression><![CDATA[$F{IssueYear}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="410" y="10" width="80" height="30" forecolor="#FFFFFF" uuid="fae27bce-5260-427d-b167-b273d7d3b836"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Mileage}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###%;(#,##0.###">
+				<reportElement x="490" y="10" width="56" height="30" forecolor="#FFFFFF" uuid="071551e0-fcb3-4584-8785-cef395696e5f"/>
+				<textFieldExpression><![CDATA[$F{Demolition}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="16" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="2" y="0" width="555" height="13" forecolor="#D0B48E" backcolor="#006699" uuid="21b8ec89-3912-4f38-b1d2-846c348d496b"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="513" y="0" width="40" height="13" forecolor="#FFFFFF" uuid="2f1f4647-386f-4ee9-b3b1-779c70fd7960"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="433" y="0" width="80" height="13" forecolor="#FFFFFF" uuid="c50a7647-9d9b-4145-89d7-15adb353fac4"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd.MM.yyyy hh:mm">
+					<reportElement style="SubTitle" x="2" y="0" width="197" height="13" forecolor="#FFFFFF" uuid="2a75ce15-0152-4154-9a45-a23c6a9d3107"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+						<paragraph lineSpacing="AtLeast"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="191">
+			<frame>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="2" y="0" width="555" height="190" backcolor="rgba(101, 102, 96, 0.4745098)" uuid="7d84e2a7-fd1f-43c9-b12d-2f54967f8261"/>
+			</frame>
+			<textField>
+				<reportElement x="280" y="40" width="100" height="30" uuid="b614ae6b-b8ed-4bc3-8966-43066d98b2e9"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{COUNT_TRANSPORT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="40" width="279" height="30" uuid="79c9e1be-95b3-4b5a-82b1-2031c8b92d92"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Transport count:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00##%">
+				<reportElement x="280" y="70" width="100" height="30" uuid="080a82db-d742-4210-9ce4-0ddf5110c6ad"/>
+				<textElement>
+					<font fontName="Times New Roman" size="20"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{AVG_DEMOLITION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="70" width="275" height="30" uuid="1ffdbd45-851a-4e7f-bf69-f2fafb1cf59b"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Average demolition of car park:]]></text>
+			</staticText>
+			<textField pattern="#,##0 Km">
+				<reportElement x="280" y="100" width="100" height="30" uuid="8b3abfe6-bf17-4593-bc58-b554aa49a5cc"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{AVG_MILEAGE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="100" width="281" height="30" uuid="2c03336a-49e4-438a-b516-5ca1b39af371"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Average mileage:]]></text>
+			</staticText>
+			<textField pattern="##0.00 L">
+				<reportElement x="280" y="130" width="100" height="30" uuid="f0bc9f16-6044-46e6-b66b-e51af04bb61a"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{AVG_FUELCOST}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="130" width="275" height="30" uuid="31b1a0ee-15ea-485a-bf10-cdcbc2e2c3bc"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Average fuel cost per 100Km:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="280" y="160" width="100" height="30" uuid="3be55e2b-e4a9-43db-adf1-3684587ca6cb"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Average year of issue transport}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="160" width="275" height="30" uuid="a44a9fef-775e-41ae-a404-f0cb173f1d40"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Average year of issue transport:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="0" width="100" height="30" uuid="7a6df82d-618a-493b-8bd4-bea51b773922"/>
+				<textElement>
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[Summary]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

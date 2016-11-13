@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="263.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.boyarskycompany.src.controllers.ConnectController">
+   <children>
+      <ImageView fx:id="gif" fitHeight="263.0" fitWidth="358.0">
+         <image>
+            <Image url="@../images/woo_truck.gif" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="WAIT" />
+         </cursor>
+      </ImageView>
+      <ProgressIndicator fx:id="connectProgress" layoutX="148.0" layoutY="91.0" prefHeight="81.0" prefWidth="63.0">
+         <effect>
+            <Glow />
+         </effect>
+         <cursor>
+            <Cursor fx:constant="WAIT" />
+         </cursor>
+      </ProgressIndicator>
+      <Text fx:id="connectText" layoutY="254.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%connectingText" textAlignment="RIGHT" wrappingWidth="253.0">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font>
+      </Text>
+      <Text fx:id="userNameText" fill="#5520c6" layoutX="257.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="86.13671875">
+         <font>
+            <Font name="Arial" size="18.0" />
+         </font></Text>
+   </children>
+</AnchorPane>
