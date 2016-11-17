@@ -1,8 +1,6 @@
 package com.boyarskycompany.src.privacy;
 
 
-import com.boyarskycompany.src.controllers.LogController;
-import com.boyarskycompany.src.controllers.LoginData;
 import com.boyarskycompany.src.run.Main;
 
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ public class Users {
 
     public static void addnewUser(UserBean user) {
         Preferences prefs = Preferences.userNodeForPackage(Main.class);
-       long i = Long.parseLong(prefs.get("number", "0"));
+        long i = Long.parseLong(prefs.get("number", "0"));
         if (i == 0) {
             prefs.put("number", "1");
             i++;
@@ -32,18 +30,28 @@ public class Users {
 
     public static void deleteUser(UserBean user) {
         Preferences preferences = Preferences.userNodeForPackage(Main.class);
-        LoginData loginData = LogController.login(user.getUserName(), user.getUserPassword());
-        preferences.remove("user" + loginData.getNumber());
-        preferences.remove("password" + loginData.getNumber());
-        preferences.remove("privileges" + loginData.getNumber());
+        for (int i = 1; ; i++) {
+            if (preferences.get("user" + i, "0").equals(user.getUserName())) {
+                preferences.remove("user" + i);
+                preferences.remove("password" + i);
+                preferences.remove("privileges" + i);
+                break;
+            }
+        }
     }
-    public static void changeUser(String user, String newName, String password, String newPassword, String newPrivileges) {
-        LoginData loginData = LogController.login(user, password);
-        if (loginData.isValidated()) {
-            Preferences prefs = Preferences.userNodeForPackage(Main.class);
-            prefs.put("user" + loginData.getNumber(), newName);
-            prefs.put("password" + loginData.getNumber(), newPassword);
-            prefs.put("privileges" + loginData.getNumber(), newPrivileges);
+
+    public static void changeUser(UserBean oldUser, UserBean newUser) {
+        boolean isValide = isValide(oldUser);
+        Preferences prefs = Preferences.userNodeForPackage(Main.class);
+        if (isValide) {
+            for (int i = 1; ; i++) {
+                if (prefs.get("user" + i, "0").equals(oldUser.getUserName())) {
+                    prefs.put("user" + i, newUser.getUserName());
+                    prefs.put("password" + i, newUser.getUserPassword());
+                    prefs.put("privileges" + i, newUser.getUserPrivileges());
+                    break;
+                }
+            }
         }
     }
 
@@ -86,5 +94,16 @@ public class Users {
             }
         }
         return userList;
+    }
+
+    public static boolean isValide(UserBean user) {
+        List<UserBean> users = getAllUsers();
+        for (UserBean userBean : users) {
+            if (userBean.getUserName().equals(user.getUserName()) && userBean.getUserPassword().equals(user.getUserPassword())) {
+                user.setUserPrivileges(userBean.getUserPrivileges());
+                return true;
+            }
+        }
+        return false;
     }
 }

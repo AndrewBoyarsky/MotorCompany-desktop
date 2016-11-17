@@ -99,12 +99,11 @@ public class LoadController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            load(TimeUnit.MILLISECONDS, 5, Main.getPrStg());
+            load(TimeUnit.MILLISECONDS, 5000, Main.getPrStg());
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }
 

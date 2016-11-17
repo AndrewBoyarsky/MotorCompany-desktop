@@ -77,28 +77,28 @@ public class UserController implements Initializable {
 
         userNameColumn.setOnEditCommit(event -> {
             if (isUnique(event.getNewValue())) {
-                ConfirmationAlert confirmationAlert = new ConfirmationAlert("confirmUpdateUser");
+                ConfirmationAlert confirmationAlert = new ConfirmationAlert("confirmationUpdateUserContentText");
                 if (confirmationAlert.showAndWait().get().getButtonData() == ButtonBar.ButtonData.YES) {
                     UserBean user = event.getRowValue();
-                    Users.changeUser(event.getOldValue(), event.getNewValue(), user.getUserPassword(), user.getUserPassword(), user.getUserPrivileges());
                     event.getRowValue().setUserName(event.getNewValue());
+                    Users.changeUser(user, event.getRowValue());
                 }
             }
         });
         userPasswordColumn.setOnEditCommit(event -> {
-            ConfirmationAlert confirmationAlert = new ConfirmationAlert("confirmUpdateUser");
+            ConfirmationAlert confirmationAlert = new ConfirmationAlert("confirmationUpdateUserContentText");
             if (confirmationAlert.showAndWait().get().getButtonData() == ButtonBar.ButtonData.YES) {
                 UserBean user = event.getRowValue();
-                Users.changeUser(user.getUserName(), user.getUserName(), event.getOldValue(), event.getNewValue(), user.getUserPrivileges());
                 event.getRowValue().setUserPassword(event.getNewValue());
+                Users.changeUser(user, event.getRowValue());
             }
         });
         userPrivilegesColumn.setOnEditCommit(event -> {
-            ConfirmationAlert confirmationAlert = new ConfirmationAlert("confirmUpdateUser");
+            ConfirmationAlert confirmationAlert = new ConfirmationAlert("confirmationUpdateUserContentText");
             if (confirmationAlert.showAndWait().get().getButtonData() == ButtonBar.ButtonData.YES) {
                 UserBean user = event.getRowValue();
-                Users.changeUser(user.getUserName(), user.getUserName(), user.getUserPassword(), user.getUserPassword(), event.getNewValue());
                 event.getRowValue().setUserPrivileges(event.getNewValue());
+                Users.changeUser(user, event.getRowValue());
             }
         });
 
@@ -110,6 +110,7 @@ public class UserController implements Initializable {
                     ((Stage) warningAlert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("images/warningIcon.png"));
                     if (warningAlert.showAndWait().get().getButtonData() == ButtonBar.ButtonData.YES) {
                         Users.deleteUser(userBean);
+                        userTable.getItems().remove(userBean);
                     }
                 }
             }
@@ -159,12 +160,6 @@ public class UserController implements Initializable {
     }
 
     private UserBean getCurrentUser() {
-        List<UserBean> list = userTable.getItems();
-        for (UserBean user : list) {
-            if (user.getUserName().equals(LogController.getUserName())) {
-                return user;
-            }
-        }
-        return new UserBean();
+        return LogController.getCurrentUser();
     }
 }

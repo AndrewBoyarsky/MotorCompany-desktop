@@ -5,6 +5,7 @@ import com.boyarskycompany.src.controllers.converters.*;
 import com.boyarskycompany.src.controllers.database.dauimpl.BaseDAUImpl;
 import com.boyarskycompany.src.controllers.entities.util.ClassUtil;
 import com.boyarskycompany.src.controllers.entities.util.RecordsIdsTuple;
+import com.boyarskycompany.src.controllers.entities.util.StageRegister;
 import com.boyarskycompany.src.controllers.entities.util.alerts.ConfirmationAlert;
 import com.boyarskycompany.src.controllers.entities.util.alerts.ErrorParsingAlert;
 import com.boyarskycompany.src.controllers.entities.util.alerts.WarningAlert;
@@ -815,6 +816,7 @@ public class EntityController<T> implements Initializable, Configurable {
         stage.setTitle(Main.getResLan().getString(ClassUtil.getSimpleLowerCaseClassName(cl)));
         stage.getIcons().add(new Image("images/documentIcon.png"));
         stage.setScene(scene);
+        StageRegister.register(stage);
         stage.show();
     }
 

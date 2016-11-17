@@ -17,6 +17,6 @@ public class ConnectController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Main.getPrStg().setTitle(resources.getString("connectTitle"));
-        userNameText.setText(LogController.getUserPrivileges());
+        userNameText.setText(LogController.getCurrentUser().getUserPrivileges());
     }
 }

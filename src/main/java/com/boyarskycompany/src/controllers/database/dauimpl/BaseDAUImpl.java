@@ -5,6 +5,7 @@ import com.boyarskycompany.src.controllers.database.HibernateUtil;
 import com.boyarskycompany.src.controllers.database.dau.BaseDAU;
 import com.boyarskycompany.src.controllers.entities.util.ClassUtil;
 import com.boyarskycompany.src.controllers.entities.util.RecordsIdsTuple;
+import com.boyarskycompany.src.controllers.entities.util.StageRegister;
 import com.boyarskycompany.src.run.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,8 +13,8 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
@@ -279,7 +280,9 @@ public class BaseDAUImpl<T> implements BaseDAU<T> {
     public void createReportViaConnection(final String jrxmlSource) throws IOException {
         Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("fxml/constructIndicator.fxml"), Main.getResLan()));
         ProgressBar progressBar = ConstructReportController.getProgressBar();
-        Task task = new Task() {
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        Task task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 Session session = HibernateUtil.getSessionFactory().openSession();
@@ -288,12 +291,24 @@ public class BaseDAUImpl<T> implements BaseDAU<T> {
                     session.doWork(connection -> {
                         try {
                             progressBar.setProgress(0.2);
+                            if (isCancelled()) {
+                                throw new RuntimeException("Thread has been interupted");
+                            }
                             JasperDesign jd = JRXmlLoader.load(getClass().getResourceAsStream(jrxmlSource));
                             progressBar.setProgress(0.3);
+                            if (isCancelled()) {
+                                throw new RuntimeException("Thread has been interupted");
+                            }
                             JasperReport jasperReport = JasperCompileManager.compileReport(jd);
                             progressBar.setProgress(0.6);
+                            if (isCancelled()) {
+                                throw new RuntimeException("Thread has been interupted");
+                            }
                             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, new HashedMap(),
                                     connection);
+                            if (isCancelled()) {
+                                throw new RuntimeException("Thread has been interupted");
+                            }
                             progressBar.setProgress(0.8);
                             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                             progressBar.setProgress(0.95);
@@ -304,26 +319,33 @@ public class BaseDAUImpl<T> implements BaseDAU<T> {
                         catch (JRException e) {
                             e.printStackTrace();
                         }
+                        catch (RuntimeException e) {
+                            System.out.println(e.getMessage());
+                        }
                     });
-
                 }
                 finally {
                     session.close();
                 }
+
                 return null;
             }
         };
+        task.setOnSucceeded(e -> stage.close());
+        task.setOnCancelled(e -> stage.close());
         Thread thread = new Thread(task);
-        Stage stage = new Stage(StageStyle.UTILITY);
-        stage.setScene(scene);
+        stage.getIcons().add(new Image("images/reportConstructIcon.png"));
+        stage.setTitle(Main.getResLan().getString("reportConstructTitle"));
         stage.setResizable(false);
-        stage.setOnCloseRequest(e -> thread.interrupt());
         stage.centerOnScreen();
         stage.show();
-        task.setOnSucceeded(e -> {
-            progressBar.setProgress(0d);
+        StageRegister.register(stage);
+        thread.start();
+        stage.setOnCloseRequest(e -> {
+            if (task.isRunning()) {
+                task.cancel();
+            }
             stage.close();
         });
-        thread.start();
     }
 }

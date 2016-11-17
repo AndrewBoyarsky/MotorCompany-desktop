@@ -1,5 +1,6 @@
 package com.boyarskycompany.src.controllers.entities.util.alerts;
 
+import com.boyarskycompany.src.run.Main;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -14,5 +15,10 @@ public class ErrorParsingAlert extends AbstractAlert {
         getButtonTypes().clear();
         getButtonTypes().add(ButtonType.OK);
         show();
+    }
+
+    public ErrorParsingAlert(String contentPropertyResourceBundleName, String headerPropertyResourceBundleName, String titlePropertyResourceBundleName) {
+        this(contentPropertyResourceBundleName, headerPropertyResourceBundleName);
+        setTitle(Main.getResLan().getString(titlePropertyResourceBundleName));
     }
 }

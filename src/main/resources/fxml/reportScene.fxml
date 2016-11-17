@@ -4,33 +4,33 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.boyarskycompany.src.controllers.ReportController">
+<VBox alignment="CENTER" prefHeight="453.0" prefWidth="213.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.boyarskycompany.src.controllers.ReportController">
    <children>
-      <Button fx:id="agreementReportButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" text="%agreementReportButton">
+      <Button fx:id="agreementReportButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" text="%agreementReportButton" wrapText="true">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Button fx:id="bidReportButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" text="%bidReportButton">
+      <Button fx:id="bidReportButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" text="%bidReportButton" wrapText="true">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Button fx:id="transportReportButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" text="%transportReportButton">
+      <Button fx:id="transportReportButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" text="%transportReportButton" wrapText="true">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Button fx:id="roadListReportButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" text="%roadListReportButton">
+      <Button fx:id="roadListReportButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" text="%roadListReportButton" wrapText="true">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Button fx:id="waybillReportButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" text="%waybillReportButton">
+      <Button fx:id="waybillReportButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" text="%waybillReportButton" wrapText="true">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Button fx:id="totalBillReportButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" text="%totalBillReportButton">
+      <Button fx:id="totalBillReportButton" alignment="BOTTOM_LEFT" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" text="%totalBillReportButton" wrapText="true">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Button fx:id="closeButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="25.0" prefWidth="211.0" text="%closeButton">
+      <Button fx:id="closeButton" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="53.0" prefWidth="211.0" text="%closeButton" wrapText="true">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>

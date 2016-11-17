@@ -95,13 +95,14 @@
                         <goal>launch4j</goal>
                     </goals>
                     <configuration>
-                        <headerType>gui</headerType>
+                        <headerType>console</headerType>
                         <icon>mainIcon.ico</icon>
                         <outfile>target/MotorCompanyInformationSystem.exe</outfile>
-                        <jar>target/MCIS-1.0-SNAPSHOT.jar</jar>
+                        <jar>target/MCWeb-1.0-SNAPSHOT.jar</jar>
                         <classPath>
                             <mainClass>com.boyarskycompany.src.run.Main</mainClass>
                         </classPath>
+                        <manifest>target/classes/MotorCompanyInformationSystem.exe.manifest</manifest>
                         <jre>
                             <minVersion>1.8.0</minVersion>
                             <initialHeapSize>128</initialHeapSize>

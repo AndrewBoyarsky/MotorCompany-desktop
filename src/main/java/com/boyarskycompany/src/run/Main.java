@@ -17,7 +17,7 @@ public class Main extends Application {
         Main.resLan = resLan;
     }
 
-    public static ResourceBundle getResLan() {
+    public static synchronized ResourceBundle getResLan() {
         return resLan;
     }
 
@@ -40,6 +40,7 @@ public class Main extends Application {
             System.exit(0);
         });
         primaryStage.setScene(loadScene);
+
 //        primaryStage.show(); // only for test
 
     }
@@ -53,13 +54,11 @@ public class Main extends Application {
     }
 
     public static void chooseLanguage() {
-        ArrayList<String> listOfLanguages = new ArrayList<>(Arrays.asList("Русский", "Українська", "English"));
-        ChoiceDialog<String> languageChooser = new ChoiceDialog<>("English", listOfLanguages);
-        ((Stage) languageChooser.getDialogPane().getScene().getWindow()).getIcons().add(new Image("images/languageIcon.png"));
         Locale defaultLocale = Locale.getDefault();
+        String defaultChoice;
         ResourceBundle defaultRes = null;
-        if (resLan != null) {
-            defaultRes = resLan;
+        if (getResLan() != null) {
+            defaultRes = getResLan();
         } else if (defaultLocale.getLanguage().equalsIgnoreCase("ru")) {
             defaultRes = ResourceBundle.getBundle("internationalization/languages", CharsetControl.RUS);
         } else if (defaultLocale.getLanguage().equalsIgnoreCase("ua")) {
@@ -67,6 +66,12 @@ public class Main extends Application {
         } else {
             defaultRes = ResourceBundle.getBundle("internationalization/languages", CharsetControl.ENG);
         }
+        setResLan(null);
+        defaultChoice = defaultRes.getString("language");
+        System.out.println("Default language: " + defaultChoice);
+        ArrayList<String> listOfLanguages = new ArrayList<>(Arrays.asList("Русский", "Українська", "English"));
+        ChoiceDialog<String> languageChooser = new ChoiceDialog<>(defaultChoice, listOfLanguages);
+        ((Stage) languageChooser.getDialogPane().getScene().getWindow()).getIcons().add(new Image("images/languageIcon.png"));
         languageChooser.setContentText(defaultRes.getString("chooseLanguageText"));
         languageChooser.setTitle(defaultRes.getString("chooseLanguageTitle"));
         languageChooser.setHeaderText(defaultRes.getString("chooseLanguageHeader"));

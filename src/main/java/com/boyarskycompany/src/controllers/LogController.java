@@ -1,6 +1,7 @@
 package com.boyarskycompany.src.controllers;
 
 import com.boyarskycompany.src.controllers.database.HibernateUtil;
+import com.boyarskycompany.src.privacy.UserBean;
 import com.boyarskycompany.src.privacy.Users;
 import com.boyarskycompany.src.run.Main;
 import javafx.concurrent.Task;
@@ -19,20 +20,22 @@ import java.util.ResourceBundle;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import static com.boyarskycompany.src.privacy.Users.isValide;
+
 
 /**
  * Created by zandr on 16.09.2016.
  */
 public class LogController implements Initializable {
 
-    private static String userPrivileges;
-    private static String userName;
-    public static String getUserPrivileges() {
-        return userPrivileges;
+    private static UserBean currentUser;
+
+    public static UserBean getCurrentUser() {
+        return currentUser;
     }
 
-    public static String getUserName() {
-        return userName;
+    public void setCurrentUser(UserBean currentUser) {
+        this.currentUser = currentUser;
     }
 
     @FXML
@@ -46,12 +49,11 @@ public class LogController implements Initializable {
 
     @FXML
     private void handleLoginButton() throws IOException, SQLException {
-//        userField.setText("Admin"); //only for test
-//        passwordField.setText("finalfullpowers"); //only for test
-        LoginData loginData = login(userField.getText(), passwordField.getText());
-        if (loginData.isValidated()) {
+        UserBean user = new UserBean(userField.getText(), passwordField.getText());
+
+        if (isValide(user)) {
+            currentUser = user;
             infField.setVisible(false);
-            Preferences pref = Preferences.userNodeForPackage(Main.class);
             Main.getPrStg().setScene(new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("fxml/connecting.fxml"), Main.getResLan())));
             Thread thread;
             Task task = new Task() {
@@ -77,23 +79,6 @@ public class LogController implements Initializable {
             passwordField.clear();
         }
     }
-
-    public static LoginData login(String user, String password) {
-        Preferences prefs = Preferences.userNodeForPackage(Main.class);
-        int number = Integer.parseInt(prefs.get("number", "0"));
-        if (number == 0) return new LoginData(false, -1);
-        else
-            for (int i = 1; i <= number; i++)
-                if (prefs.get("user" + i, "0").equals(user) && !prefs.get("user" + i, "0").equals("0"))
-                    if (prefs.get("password" + i, "0").equals(password) && !prefs.get("password" + i, "0").equals("0")) {
-                        userPrivileges = prefs.get("privileges" + i, "0");
-                        userName = prefs.get("user" + i, "0");
-                        return new LoginData(true, i);
-                    }
-
-        return new LoginData(false, -1);
-    }
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

@@ -18,6 +18,11 @@ public class UserBean {
         this.userPrivileges = userPrivileges;
     }
 
+    public UserBean(String userName, String userPassword) {
+        this.userName = userName;
+        this.userPassword = userPassword;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
