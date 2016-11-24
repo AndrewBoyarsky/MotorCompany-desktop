@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="235.0" prefWidth="408.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.boyarskycompany.src.controllers.ConstructReportController">
+   <children>
+      <BorderPane prefHeight="235.0" prefWidth="408.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <bottom>
+            <ProgressBar fx:id="constructReportProgress" prefHeight="18.0" prefWidth="409.0" progress="0.0" />
+         </bottom>
+         <center>
+            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fitHeight="217.0" fitWidth="408.0" nodeOrientation="INHERIT" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/reportImage.jpg" />
+                     </image>
+                  </ImageView>
+                  <ProgressIndicator layoutX="14.0" layoutY="82.0" />
+                  <Text layoutX="78.0" layoutY="113.0" strokeType="INSIDE" strokeWidth="0.0" text="%reportConstructText" textAlignment="CENTER" wrappingWidth="200.0">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Text>
+               </children>
+            </Pane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

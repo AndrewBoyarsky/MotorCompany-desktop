@@ -52,12 +52,12 @@ public class LoadController implements Initializable {
             public void handle(WorkerStateEvent event) {
                 Parent login = null;
                 try {
-                    login = FXMLLoader.load(getClass().getClassLoader().getResource("fxml/login.fxml"), getResLan());
+                    login = FXMLLoader.load(getClass().getClassLoader().getResource("fxml/loginScene.fxml"), getResLan());
                 }
                 catch (IOException e) {
                     e.printStackTrace();
                 }
-                stage.close();
+                Main.getLoadStage().close();
                 Scene loginScene = new Scene(login);
                 stage.setScene(loginScene);
                 stage.show();
@@ -79,8 +79,6 @@ public class LoadController implements Initializable {
                 }
 
         });
-        stage.setTitle(getResLan().getString("loadingTitle"));
-        stage.show();
         final Thread thread = new Thread(task, "task-thread");
         thread.setDaemon(true);
         thread.start();

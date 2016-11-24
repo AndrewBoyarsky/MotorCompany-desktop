@@ -1,4 +1,13 @@
-package com.boyarskycompany.src.controllers.entities.util;
+package com.boyarskycompany.src.controllers.util;
+
+import com.boyarskycompany.src.controllers.database.HibernateUtil;
+import org.hibernate.SessionFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import static com.boyarskycompany.src.run.Main.getResLan;
 
 /**
  * Created by zandr on 18.10.2016.
@@ -25,6 +34,24 @@ public class ClassUtil {
         return null;
     }
 
+    public static Class loadClassFromEntityName(String entityName) throws ClassNotFoundException {
+        return Class.forName("com.boyarskycompany.src.entities." + entityName);
+    }
+    public static DoubleTuple<List<String>, List<String>> getTablesNames() {
+        ResourceBundle resourceBundle = getResLan();
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        List<String> entityList = new ArrayList<String>();
+        List<String> tableList = new ArrayList<String>();
+        factory.getMetamodel().getEntities().forEach(entityType -> {
+            String entityName = entityType.getName();
+            entityList.add(entityName);
+            String tableName = entityName.substring(0, 1).toLowerCase() +
+                    entityName.substring(1, entityName.indexOf("Entity"));
+            tableList.add(resourceBundle.getString(tableName));
+        });
+        DoubleTuple<List<String>, List<String>> ev = new DoubleTuple<List<String>, List<String>>(tableList, entityList);
+        return ev;
+    }
     public static Class loadClassFromCollectionField(String fieldName) {
         try {
             return Class.forName("com.boyarskycompany.src.entities." + fieldName.substring(0, 1).toUpperCase() +

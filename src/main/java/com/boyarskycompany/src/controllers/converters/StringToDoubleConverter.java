@@ -1,6 +1,6 @@
 package com.boyarskycompany.src.controllers.converters;
 
-import javafx.scene.control.Alert;
+import com.boyarskycompany.src.controllers.util.alerts.ErrorParsingAlert;
 import javafx.util.StringConverter;
 
 /**
@@ -19,13 +19,12 @@ public class StringToDoubleConverter extends StringConverter<Double> {
         if (string == null || string.length() == 0 || string.isEmpty()) {
             return null;
         }
-        Double d = -1d;
+        Double d = null;
         try {
             d = Double.parseDouble(string);
         }
         catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.show();
+            new ErrorParsingAlert("DoubleErrorParsingText", "DoubleErrorParsingHeader");
         }
         return d;
     }

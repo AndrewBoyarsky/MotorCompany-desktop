@@ -41,7 +41,7 @@ public class Users {
     }
 
     public static void changeUser(UserBean oldUser, UserBean newUser) {
-        boolean isValide = isValide(oldUser);
+        boolean isValide = isValid(oldUser);
         Preferences prefs = Preferences.userNodeForPackage(Main.class);
         if (isValide) {
             for (int i = 1; ; i++) {
@@ -96,7 +96,7 @@ public class Users {
         return userList;
     }
 
-    public static boolean isValide(UserBean user) {
+    public static boolean isValid(UserBean user) {
         List<UserBean> users = getAllUsers();
         for (UserBean userBean : users) {
             if (userBean.getUserName().equals(user.getUserName()) && userBean.getUserPassword().equals(user.getUserPassword())) {

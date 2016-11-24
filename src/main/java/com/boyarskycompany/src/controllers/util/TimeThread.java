@@ -1,4 +1,4 @@
-package com.boyarskycompany.src.controllers.entities.util;
+package com.boyarskycompany.src.controllers.util;
 
 import com.boyarskycompany.src.controllers.LogController;
 import com.boyarskycompany.src.run.Main;

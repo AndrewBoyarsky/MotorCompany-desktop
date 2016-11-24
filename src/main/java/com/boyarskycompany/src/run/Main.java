@@ -6,12 +6,22 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.util.*;
 
 public class Main extends Application {
     private static Stage prStg;
+    private static Stage loadStage;
     private static ResourceBundle resLan;
+
+    public static Stage getLoadStage() {
+        return loadStage;
+    }
+
+    public static void setLoadStage(Stage loadStage) {
+        Main.loadStage = loadStage;
+    }
 
     private static void setResLan(ResourceBundle resLan) {
         Main.resLan = resLan;
@@ -33,14 +43,17 @@ public class Main extends Application {
             System.exit(0);
         }
         setPrStg(primaryStage);
+        primaryStage.close();
         primaryStage.setResizable(false);
         primaryStage.centerOnScreen();
-        Scene loadScene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("fxml/load.fxml"), resLan));
+        Scene loadScene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("fxml/loadScene.fxml"), resLan));
         primaryStage.setOnCloseRequest(e -> {
             System.exit(0);
         });
-        primaryStage.setScene(loadScene);
-
+        Stage loadStage = new Stage(StageStyle.UNDECORATED);
+        loadStage.setScene(loadScene);
+        loadStage.show();
+        setLoadStage(loadStage);
 //        primaryStage.show(); // only for test
 
     }
@@ -60,13 +73,12 @@ public class Main extends Application {
         if (getResLan() != null) {
             defaultRes = getResLan();
         } else if (defaultLocale.getLanguage().equalsIgnoreCase("ru")) {
-            defaultRes = ResourceBundle.getBundle("internationalization/languages", CharsetControl.RUS);
+            defaultRes = ResourceBundle.getBundle("localization/languages", CharsetControl.RUS);
         } else if (defaultLocale.getLanguage().equalsIgnoreCase("ua")) {
-            defaultRes = ResourceBundle.getBundle("internationalization/languages_uk", CharsetControl.UA);
+            defaultRes = ResourceBundle.getBundle("localization/languages_uk", CharsetControl.UA);
         } else {
-            defaultRes = ResourceBundle.getBundle("internationalization/languages", CharsetControl.ENG);
+            defaultRes = ResourceBundle.getBundle("localization/languages", CharsetControl.ENG);
         }
-        setResLan(null);
         defaultChoice = defaultRes.getString("language");
         System.out.println("Default language: " + defaultChoice);
         ArrayList<String> listOfLanguages = new ArrayList<>(Arrays.asList("Русский", "Українська", "English"));
@@ -78,13 +90,14 @@ public class Main extends Application {
         Optional<String> result = languageChooser.showAndWait();
         result.ifPresent(language -> {
             if (language.equals("Русский")) {
-                setResLan(ResourceBundle.getBundle("internationalization/languages", CharsetControl.RUS));
+                setResLan(ResourceBundle.getBundle("localization/languages", CharsetControl.RUS));
             } else if (language.equals("Українська")) {
-                setResLan(ResourceBundle.getBundle("internationalization/languages_uk", CharsetControl.UA));
+                setResLan(ResourceBundle.getBundle("localization/languages_uk", CharsetControl.UA));
             } else if (language.equals("English")) {
-                setResLan(ResourceBundle.getBundle("internationalization/languages", CharsetControl.ENG));
+                setResLan(ResourceBundle.getBundle("localization/languages", CharsetControl.ENG));
             }
         });
     }
+
 }
 

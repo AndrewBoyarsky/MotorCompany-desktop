@@ -1,8 +1,8 @@
 package com.boyarskycompany.src.controllers;
 
-import com.boyarskycompany.src.controllers.entities.util.alerts.ConfirmationAlert;
-import com.boyarskycompany.src.controllers.entities.util.alerts.ErrorParsingAlert;
-import com.boyarskycompany.src.controllers.entities.util.alerts.WarningAlert;
+import com.boyarskycompany.src.controllers.util.alerts.ConfirmationAlert;
+import com.boyarskycompany.src.controllers.util.alerts.ErrorParsingAlert;
+import com.boyarskycompany.src.controllers.util.alerts.WarningAlert;
 import com.boyarskycompany.src.privacy.UserBean;
 import com.boyarskycompany.src.privacy.Users;
 import javafx.fxml.FXML;

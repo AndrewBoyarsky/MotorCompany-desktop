@@ -2,11 +2,11 @@ package com.boyarskycompany.src.controllers;
 
 
 import com.boyarskycompany.src.controllers.database.HibernateUtil;
-import com.boyarskycompany.src.controllers.entities.util.DoubleTuple;
-import com.boyarskycompany.src.controllers.entities.util.StageRegister;
-import com.boyarskycompany.src.controllers.entities.util.TimeThread;
-import com.boyarskycompany.src.controllers.entities.util.alerts.ConfirmationAlert;
-import com.boyarskycompany.src.controllers.entities.util.alerts.ErrorParsingAlert;
+import com.boyarskycompany.src.controllers.util.DoubleTuple;
+import com.boyarskycompany.src.controllers.util.StageRegister;
+import com.boyarskycompany.src.controllers.util.TimeThread;
+import com.boyarskycompany.src.controllers.util.alerts.ConfirmationAlert;
+import com.boyarskycompany.src.controllers.util.alerts.ErrorParsingAlert;
 import com.boyarskycompany.src.run.Main;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -22,7 +22,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.hibernate.SessionFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,20 +31,21 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static com.boyarskycompany.src.controllers.util.ClassUtil.getTablesNames;
 import static com.boyarskycompany.src.run.Main.getResLan;
 
 
 public class MainController implements Initializable {
-    private static final Date INIT_TIME = new Date();
     private static TimeThread timeThread = new TimeThread();
+
     static {
         System.out.println("Static loading...");
     }
+    @FXML
+    private Menu menuFile;
     @FXML
     private Button closeButton;
 
@@ -83,8 +83,6 @@ public class MainController implements Initializable {
 
     @FXML
     private void handleBackupDatabaseClick() throws IOException, InterruptedException {
-//        Map<String, Object> properties = HibernateUtil.getSessionFactory().getProperties();
-//        mysql -P 3306 -h yourdomain.ru -u mylogin_user -p mylogin_db
         ResourceBundle res = Main.getResLan();
         String cmdExec = "mysqldump -usql7142192 -hsql7.freesqldatabase.com -phHqaefpvS5 sql7142192  > ";
         FileChooser fileChooser = new FileChooser();
@@ -121,12 +119,18 @@ public class MainController implements Initializable {
             Thread thread = new Thread(backupTask);
             backupTask.setOnFailed(e -> {
                 backupProgressStage.close();
+                setDisableForDangerousAction(false);
                 System.err.println("Backup was failed");
                 new ErrorParsingAlert("errorBackupFailedText", "errorTitle", "errorTitle");
             });
-            backupTask.setOnRunning(e -> backupProgressStage.show());
+            backupTask.setOnRunning(e -> {
+                StageRegister.closeStages();
+                backupProgressStage.show();
+                setDisableForDangerousAction(true);
+            });
             backupTask.setOnSucceeded(e -> {
                 backupProgressStage.close();
+                setDisableForDangerousAction(false);
                 System.out.println("Backup was successfully done");
                 Alert informationAlert = new Alert(Alert.AlertType.INFORMATION, Main.getResLan().getString("informationBackupDatabaseContentText"));
                 ((Stage) informationAlert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("images/aboutIcon.png"));
@@ -161,6 +165,14 @@ public class MainController implements Initializable {
         return stage;
     }
 
+    private void setDisableForDangerousAction(boolean disableStatus) {
+        menuFile.setDisable(disableStatus);
+        menuTools.setDisable(disableStatus);
+        reportButton.setDisable(disableStatus);
+        createNewDocumentButton.setDisable(disableStatus);
+        closeButton.setDisable(disableStatus);
+
+    }
     @FXML
     private void handleRestoreDatabaseClick() throws IOException, InterruptedException {
         ResourceBundle res = Main.getResLan();
@@ -192,14 +204,19 @@ public class MainController implements Initializable {
             };
             restoreTask.setOnSucceeded(e -> {
                 restoreProgressStage.close();
+                setDisableForDangerousAction(false);
                 System.out.println("Restore was successfully completed");
                 Alert informationAlert = new Alert(Alert.AlertType.INFORMATION, res.getString("informationRestoreDatabaseContentText"));
                 ((Stage) informationAlert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("images/aboutIcon.png"));
                 informationAlert.show();
             });
-            restoreTask.setOnRunning(e -> restoreProgressStage.show());
+            restoreTask.setOnRunning(e -> {
+                restoreProgressStage.show();
+                setDisableForDangerousAction(true);
+            });
             restoreTask.setOnFailed(e -> {
                 restoreProgressStage.close();
+                setDisableForDangerousAction(false);
                 new ErrorParsingAlert("errorRestoreFailedText", "errorTitle", "errorTitle");
             });
             Thread thread = new Thread(restoreTask);
@@ -210,10 +227,9 @@ public class MainController implements Initializable {
     @FXML
     private void handleReloginButtonClick() throws IOException {
         timeThread.suspend();
-        HibernateUtil.shutDown();
-        Scene loginScene = new Scene(FXMLLoader.load(getClass().getResource("/fxml/login.fxml"), getResLan()));
+        Scene loginScene = new Scene(FXMLLoader.load(getClass().getResource("/fxml/loginScene.fxml"), getResLan()));
         Stage stage = Main.getPrStg();
-        stage.close();
+        stage.hide();
         stage.setScene(loginScene);
         stage.setTitle(getResLan().getString("loginTitle"));
         stage.show();
@@ -234,14 +250,20 @@ public class MainController implements Initializable {
     @FXML
     private void handleChangeLanguageButtonClick() throws IOException, InterruptedException {
         ConfirmationAlert confirmationAlert = new ConfirmationAlert("confirmationChangeLanguageText");
-        if (confirmationAlert.showAndWait().get().getButtonData() == ButtonBar.ButtonData.YES) {
-            timeThread.suspend();
-            StageRegister.closeStages();
-            Main.chooseLanguage();
-            Scene mainScene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("fxml/mainScene.fxml"), getResLan()));
-            Main.getPrStg().setScene(mainScene);
-            Main.getPrStg().show();
-        }
+        if (StageRegister.getOpenedStages().size() != 0) {
+            if (confirmationAlert.showAndWait().get().getButtonData() == ButtonBar.ButtonData.YES) {
+                changeLanguage();
+            }
+        } else changeLanguage();
+    }
+
+    private void changeLanguage() throws IOException {
+        timeThread.suspend();
+        StageRegister.closeStages();
+        Main.chooseLanguage();
+        Scene mainScene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("fxml/mainScene.fxml"), getResLan()));
+        Main.getPrStg().setScene(mainScene);
+        Main.getPrStg().show();
     }
 
     @FXML
@@ -256,21 +278,6 @@ public class MainController implements Initializable {
         stage.show();
     }
 
-    private DoubleTuple<List<String>, List<String>> getTablesNames() {
-        ResourceBundle resourceBundle = getResLan();
-        SessionFactory factory = HibernateUtil.getSessionFactory();
-        List<String> entityList = new ArrayList<String>();
-        List<String> tableList = new ArrayList<String>();
-        factory.getMetamodel().getEntities().forEach(entityType -> {
-            String entityName = entityType.getName();
-            entityList.add(entityName);
-            String tableName = entityName.substring(0, 1).toLowerCase() +
-                    entityName.substring(1, entityName.indexOf("Entity"));
-            tableList.add(resourceBundle.getString(tableName));
-        });
-        DoubleTuple<List<String>, List<String>> ev = new DoubleTuple<List<String>, List<String>>(tableList, entityList);
-        return ev;
-    }
 
     private void constructDocumentTable(String tableName) {
         DoubleTuple<List<String>, List<String>> map = getTablesNames();
@@ -365,7 +372,7 @@ public class MainController implements Initializable {
         menuItemClose.setOnAction(closeButton.getOnAction());
         menuItemAbout.setOnAction(event -> {
             try {
-                Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("fxml/about.fxml"), getResLan()));
+                Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("fxml/aboutScene.fxml"), getResLan()));
                 Stage stage = new Stage(StageStyle.UTILITY);
                 stage.setTitle(menuItemAbout.getText());
                 stage.setScene(scene);
@@ -401,15 +408,11 @@ public class MainController implements Initializable {
         Main.getPrStg().setOnCloseRequest(e -> {
             handleCloseButton();
         });
-//        reportButton.setContentDisplay(ContentDisplay.LEFT);
+
         reportButton.setGraphic(new ImageView("images/createReportIcon.png"));
-//        createNewDocumentButton.setContentDisplay(ContentDisplay.LEFT);
         createNewDocumentButton.setGraphic(new ImageView("images/createNewDocumentIcon.png"));
-//        reloginButton.setContentDisplay(ContentDisplay.LEFT);
         reloginButton.setGraphic(new ImageView("images/reloginIcon.png"));
-//        closeButton.setContentDisplay(ContentDisplay.LEFT);
         closeButton.setGraphic(new ImageView("images/closeIcon.png"));
-//        closeButton.setStyle("-fx-background-position: left; -fx-background-image: url('images/docIcon.png')");
     }
 
 }

@@ -1,8 +1,6 @@
 package com.boyarskycompany.src.controllers.database.dau;
 
 
-import com.boyarskycompany.src.controllers.entities.util.RecordsIdsTuple;
-
 import java.util.List;
 
 /**
@@ -18,6 +16,4 @@ public interface BaseDAU<T> {
     public void deleteRecord(T record);
 
     public List<T> getListRecords();
-
-    public <S> RecordsIdsTuple<T> getBoundedRecords(Class<S> relatedClass, S parentRecord);
 }

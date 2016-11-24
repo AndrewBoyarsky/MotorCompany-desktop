@@ -19,7 +19,7 @@ public class StringToTimeConverter extends StringConverter<Time> {
     @Override
     public Time fromString(String string) {
         try {
-            return new Time(new SimpleDateFormat("hh.mm").parse(string).getTime());
+            return new Time(new SimpleDateFormat("HH:mm").parse(string).getTime());
         }
         catch (ParseException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

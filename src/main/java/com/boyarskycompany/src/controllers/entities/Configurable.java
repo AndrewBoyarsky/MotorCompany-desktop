@@ -9,5 +9,5 @@ import javafx.scene.layout.BorderPane;
 public interface Configurable {
     public void configureMainMenu(MenuBar menuBar);
 
-    public void configureNavigationBar(BorderPane pane);
+    public<E> void configureNavigationBar(BorderPane pane);
 }

@@ -1,4 +1,4 @@
-package com.boyarskycompany.src.controllers.entities.util.alerts;
+package com.boyarskycompany.src.controllers.util.alerts;
 
 import com.boyarskycompany.src.run.Main;
 import javafx.scene.control.ButtonType;

@@ -3,9 +3,9 @@ package com.boyarskycompany.src.controllers.database.dauimpl;
 import com.boyarskycompany.src.controllers.ConstructReportController;
 import com.boyarskycompany.src.controllers.database.HibernateUtil;
 import com.boyarskycompany.src.controllers.database.dau.BaseDAU;
-import com.boyarskycompany.src.controllers.entities.util.ClassUtil;
-import com.boyarskycompany.src.controllers.entities.util.RecordsIdsTuple;
-import com.boyarskycompany.src.controllers.entities.util.StageRegister;
+import com.boyarskycompany.src.controllers.util.ClassUtil;
+import com.boyarskycompany.src.controllers.util.DoubleTuple;
+import com.boyarskycompany.src.controllers.util.StageRegister;
 import com.boyarskycompany.src.run.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
@@ -117,12 +118,11 @@ public class BaseDAUImpl<T> implements BaseDAU<T> {
         return list;
     }
 
-    @Override
-    public <S> RecordsIdsTuple<T> getBoundedRecords(Class<S> parentClass, S parentRecord) {
+    public <S> DoubleTuple<ArrayList<T>, HashMap<Field, Long>> getBoundedRecords(Class<S> parentClass, S parentRecord) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        List records = null;
+        ArrayList records = null;
         Query<T> query = null;
-        RecordsIdsTuple<T> tuple = null;
+        DoubleTuple<ArrayList<T>, HashMap<Field, Long>> tuple = null;
         try {
             Transaction tx = session.beginTransaction();
             Class primaryKeyClass = null;
@@ -170,14 +170,8 @@ public class BaseDAUImpl<T> implements BaseDAU<T> {
             }
             String queryString = "from " + cl.getCanonicalName() + " where " + condition;
             query = session.createQuery(queryString);
-            records = query.list();
-            tuple = new RecordsIdsTuple<T>(records, ids);
-            //            S record = session.get(parentClass, (Serializable) idClass.cast(idClassInstance));
-            //            String className = cl.getSimpleName();
-            //            className = className.substring(0, className.indexOf("Entity"));
-            //            Method getRecordsListMethod = parentClass.getMethod("get" + className + "s");
-            //            getRecordsListMethod.setAccessible(true);
-            //            records = (Collection<T>) getRecordsListMethod.invoke(record);
+            records = (ArrayList) query.list();
+            tuple = new DoubleTuple<ArrayList<T>, HashMap<Field, Long>>(records, ids);
         }
         catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -278,9 +272,9 @@ public class BaseDAUImpl<T> implements BaseDAU<T> {
     }
 
     public void createReportViaConnection(final String jrxmlSource) throws IOException {
-        Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("fxml/constructIndicator.fxml"), Main.getResLan()));
+        Scene scene = new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("fxml/reportConstructScene.fxml"), Main.getResLan()));
         ProgressBar progressBar = ConstructReportController.getProgressBar();
-        Stage stage = new Stage();
+        Stage stage = new Stage(StageStyle.UTILITY);
         stage.setScene(scene);
         Task task = new Task<Void>() {
             @Override

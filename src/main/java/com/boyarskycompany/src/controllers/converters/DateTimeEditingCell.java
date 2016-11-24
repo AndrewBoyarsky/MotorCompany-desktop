@@ -1,9 +1,8 @@
 package com.boyarskycompany.src.controllers.converters;
 
 import com.boyarskycompany.src.run.Main;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
+import javafx.scene.input.KeyCode;
 import jfxtras.scene.control.CalendarPicker;
 
 import java.sql.Timestamp;
@@ -34,7 +33,7 @@ public class DateTimeEditingCell<T> extends TableCell<T, Timestamp> {
     public void cancelEdit() {
         super.cancelEdit();
 
-        setText(getDate().toString());
+        setText(new SimpleDateFormat("dd.MM.yyyy HH:mm").format(getDate()));
         setGraphic(null);
     }
 
@@ -73,14 +72,9 @@ public class DateTimeEditingCell<T> extends TableCell<T, Timestamp> {
         dateTimePicker.focusedProperty().addListener(e -> {
             System.out.println(2);
         });
-        dateTimePicker.calendarProperty().addListener(new ChangeListener<Calendar>() {
-            @Override
-            public void changed(ObservableValue<? extends Calendar> observable, Calendar oldValue, Calendar newValue) {
-                System.out.println("Committed: " + dateTimePicker.getCalendar().getTime());
-                Date localDateTime = dateTimePicker.getCalendar().getTime();
-                if (localDateTime.getMinutes() != oldValue.getTime().getMinutes()) {
-                    commitEdit(new Timestamp(newValue.getTime().getTime()));
-                }
+        dateTimePicker.setOnKeyPressed(e -> {
+            if (e.getCode().equals(KeyCode.ENTER)) {
+                    commitEdit(new Timestamp(dateTimePicker.getCalendar().getTime().getTime()));
             }
         });
     }

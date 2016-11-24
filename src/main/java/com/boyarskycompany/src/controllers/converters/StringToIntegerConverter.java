@@ -1,6 +1,6 @@
 package com.boyarskycompany.src.controllers.converters;
 
-import javafx.scene.control.Alert;
+import com.boyarskycompany.src.controllers.util.alerts.ErrorParsingAlert;
 import javafx.util.StringConverter;
 
 /**
@@ -19,13 +19,12 @@ public class StringToIntegerConverter extends StringConverter<Integer> {
         if (string == null || string.length() == 0 || string.isEmpty()) {
             return null;
         }
-        Integer integer = -1;
+        Integer integer = null;
         try {
             integer = Integer.parseInt(string);
         }
         catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.show();
+            new ErrorParsingAlert("IntegerErrorParsingText", "IntegerErrorParsingHeader");
         }
         return integer;
     }

@@ -3,12 +3,12 @@ package com.boyarskycompany.src.controllers.entities;
 
 import com.boyarskycompany.src.controllers.converters.*;
 import com.boyarskycompany.src.controllers.database.dauimpl.BaseDAUImpl;
-import com.boyarskycompany.src.controllers.entities.util.ClassUtil;
-import com.boyarskycompany.src.controllers.entities.util.RecordsIdsTuple;
-import com.boyarskycompany.src.controllers.entities.util.StageRegister;
-import com.boyarskycompany.src.controllers.entities.util.alerts.ConfirmationAlert;
-import com.boyarskycompany.src.controllers.entities.util.alerts.ErrorParsingAlert;
-import com.boyarskycompany.src.controllers.entities.util.alerts.WarningAlert;
+import com.boyarskycompany.src.controllers.util.ClassUtil;
+import com.boyarskycompany.src.controllers.util.DoubleTuple;
+import com.boyarskycompany.src.controllers.util.StageRegister;
+import com.boyarskycompany.src.controllers.util.alerts.ConfirmationAlert;
+import com.boyarskycompany.src.controllers.util.alerts.ErrorParsingAlert;
+import com.boyarskycompany.src.controllers.util.alerts.WarningAlert;
 import com.boyarskycompany.src.run.Main;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -18,6 +18,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -27,9 +28,11 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import jfxtras.scene.control.CalendarTextField;
@@ -45,7 +48,8 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.prefs.Preferences;
 
-import static com.boyarskycompany.src.controllers.entities.util.ClassUtil.getSimpleClassName;
+import static com.boyarskycompany.src.controllers.util.ClassUtil.getSimpleClassName;
+import static com.boyarskycompany.src.controllers.util.ClassUtil.getTablesNames;
 import static javafx.collections.FXCollections.observableArrayList;
 
 /**
@@ -64,14 +68,15 @@ public class EntityController<T> implements Initializable, Configurable {
     private ArrayList<TableColumn<T, ?>> columns = new ArrayList<TableColumn<T, ?>>();
     private BorderPane root = new BorderPane();
     private BorderPane additionalBorderPane = new BorderPane();
-    private FlowPane fieldsPane = new FlowPane();
-    private Button nextEntityButton;
+    private HBox fieldContainer = new HBox();
+
     private Button addRecordButton;
     private Button findButton;
     private MenuBar mainMenu = new MenuBar();
     private ContextMenu tableContextMenu;
     private BorderPane toolsPane = new BorderPane();
     private HashMap<Class, ComboBox<Long>> idClassChoosersMap = new HashMap<>();
+    private Stage stage = new Stage();
 
     public EntityController(Class<T> cl) {
         this.cl = cl;
@@ -102,13 +107,13 @@ public class EntityController<T> implements Initializable, Configurable {
     public <S> EntityController(Class<T> childEntityClass, S parentRecord, Class<S> parentEntityClass) {
         this(childEntityClass);
         table.getItems().clear();
-        RecordsIdsTuple<T> tuple = getBoundedRecords(parentEntityClass, parentRecord);
-        table.getItems().addAll(tuple.getRecordList());
-        ObservableList<Node> nodes = getFieldsPane().getChildren();
+        DoubleTuple<ArrayList<T>, HashMap<Field, Long>> tuple = getBoundedRecords(parentEntityClass, parentRecord);
+        table.getItems().addAll(tuple.gettField());
+        ObservableList<Node> nodes = getFieldContainer().getChildren();
         for (int i = 0; i < nodes.size(); i++) {
             if (ComboBox.class.isInstance(nodes.get(i))) {
                 Iterator<Map.Entry<Field, Long>> iter =
-                        tuple.getIdMap().entrySet().iterator();
+                        tuple.getwFiels().entrySet().iterator();
                 while (iter.hasNext()) {
                     Map.Entry entry = iter.next();
                     String fieldName = ((Field) entry.getKey()).getName();
@@ -125,7 +130,7 @@ public class EntityController<T> implements Initializable, Configurable {
 
     public Long getMaxId(boolean isLast) {return dauImpl.getMaxId(isLast);}
 
-    public <S> RecordsIdsTuple<T> getBoundedRecords(Class<S> relatedClass, S record) {
+    public <S> DoubleTuple<ArrayList<T>, HashMap<Field, Long>> getBoundedRecords(Class<S> relatedClass, S record) {
         return dauImpl.getBoundedRecords(relatedClass, record);
     }
 
@@ -137,13 +142,6 @@ public class EntityController<T> implements Initializable, Configurable {
         this.mainMenu = mainMenu;
     }
 
-    protected Button getNextEntityButton() {
-        return nextEntityButton;
-    }
-
-    protected void setNextEntityButton(Button nextEntityButton) {
-        this.nextEntityButton = nextEntityButton;
-    }
 
     protected Button getAddRecordButton() {
         return addRecordButton;
@@ -257,12 +255,12 @@ public class EntityController<T> implements Initializable, Configurable {
         this.additionalBorderPane = additionalBorderPane;
     }
 
-    protected FlowPane getFieldsPane() {
-        return fieldsPane;
+    protected HBox getFieldContainer() {
+        return fieldContainer;
     }
 
-    protected void setFieldsPane(FlowPane fieldsPane) {
-        this.fieldsPane = fieldsPane;
+    protected void setFieldContainer(HBox fieldContainer) {
+        this.fieldContainer = fieldContainer;
     }
 
     protected BorderPane getToolsPane() {
@@ -340,67 +338,80 @@ public class EntityController<T> implements Initializable, Configurable {
         });
     }
 
+    private void removeRecord() {
+        T record = table.getSelectionModel().getSelectedItem();
+        if (record != null) {
+            WarningAlert alert = new WarningAlert("warningDeletingRecordContentText");
+            if (alert.showAndWait().get().getButtonData() == ButtonBar.ButtonData.YES) {
+                if (haveChilds(record)) {
+                    WarningAlert haveRelatedRecordsAlert = new WarningAlert("warningHaveRelatedRecordsContentText");
+                    if (haveRelatedRecordsAlert.showAndWait().get().getButtonData() == ButtonBar.ButtonData.YES) {
+                        deleteRecordFromDatabase(record);
+                        table.getItems().remove(record);
+                        table.refresh();
+                    }
+                } else {
+                    deleteRecordFromDatabase(record);
+                    table.getItems().remove(record);
+                    table.refresh();
+                }
+            }
+        }
+    }
+
     private void construct() {
         String simpleEntityName = ClassUtil.getSimpleLowerCaseClassName(cl);
-        table.setEditable(true);
         createTableColumns(simpleEntityName);
+        table.setEditable(true);
         table.getColumns().addAll(columns);
         table.getItems().addAll(getObservableListRecordsFromDatabase());
         table.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.DELETE) {
-                T record = table.getSelectionModel().getSelectedItem();
-                if (record != null) {
-                    WarningAlert alert = new WarningAlert("warningDeletingRecordContentText");
-                    if (alert.showAndWait().get().getButtonData() == ButtonBar.ButtonData.YES) {
-                        if (haveChilds(record)) {
-                            WarningAlert haveRelatedRecordsAlert = new WarningAlert("warningHaveRelatedRecordsContentText");
-                            if (haveRelatedRecordsAlert.showAndWait().get().getButtonData() == ButtonBar.ButtonData.YES) {
-                                deleteRecordFromDatabase(record);
-                                table.getItems().remove(record);
-                                table.refresh();
-                            }
-                        } else {
-                            deleteRecordFromDatabase(record);
-                            table.getItems().remove(record);
-                            table.refresh();
-                        }
-                    }
-                }
+                removeRecord();
             }
         });
-        root.setCenter(table);
-        additionalBorderPane.setTop(fieldsPane);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setPrefViewportHeight(27);
+        scrollPane.setPrefViewportWidth(table.getWidth());
+        scrollPane.setContent(fieldContainer);
+        Text entityListLabel = new Text(res.getString(simpleEntityName + "ListLabel"));
+        entityListLabel.setFont(Font.font("Arial", 24));
+        entityListLabel.setTextAlignment(TextAlignment.CENTER);
+        entityListLabel.setTextOrigin(VPos.CENTER);
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(entityListLabel, table, scrollPane);
+        root.setCenter(vBox);
         findButton = new Button(res.getString("findButton"));
         findButton.setOnAction(e -> performSearching());
-        addRecordButton = new Button(res.getString("add" + cl.getSimpleName().substring(0, cl.getSimpleName().indexOf("Entity")) + "Button"));
-        addRecordButton.setOnAction(e -> {
-            T record = createNewRecord();
-            if (record != null) {
-                ConfirmationAlert confirmation = new ConfirmationAlert("confirmationAddingRecordContentText");
-                Optional<ButtonType> result = confirmation.showAndWait();
-                if (result.get().getButtonData() == ButtonBar.ButtonData.YES) {
-                    pushRecordIntoDatabase(record);
-                    resetStyles(fieldsPane.getChildren());
-                    incrementEntityCounter();
-                    resetFields(fieldsPane.getChildren());
-                    table.getItems().add(record);
-                }
-            }
-        });
-        nextEntityButton = new Button(res.getString("viewNextTable"));
-        Text entityListLabel = new Text(res.getString(simpleEntityName + "ListLabel"));
-        entityListLabel.setStyle("-fx-alignment: baseline-center");
-        entityListLabel.setFont(Font.font("Tahoma", 24));
-        toolsPane.setCenter(entityListLabel);
+        addRecordButton = new Button(res.getString("add" + ClassUtil.getSimpleClassName(cl) + "Button"));
+        addRecordButton.setOnAction(e -> addRecord());
         attachContextMenu();
         configureMainMenu(mainMenu);
+        configureNavigationBar(root);
         toolsPane.setTop(mainMenu);
         root.setTop(toolsPane);
         additionalBorderPane.setLeft(findButton);
         additionalBorderPane.setCenter(addRecordButton);
-        additionalBorderPane.setRight(nextEntityButton);
         additionalBorderPane.setBottom(searchField);
         root.setBottom(additionalBorderPane);
+    }
+
+    private void addRecord() {
+        T record = createNewRecord();
+        if (record != null) {
+            ConfirmationAlert confirmation = new ConfirmationAlert("confirmationAddingRecordContentText");
+            Optional<ButtonType> result = confirmation.showAndWait();
+            if (result.get().getButtonData() == ButtonBar.ButtonData.YES) {
+                pushRecordIntoDatabase(record);
+                resetStyles(fieldContainer.getChildren());
+                incrementEntityCounter();
+                resetFields(fieldContainer.getChildren());
+                table.getItems().add(record);
+            }
+        }
     }
 
     private boolean haveChilds(T record) {
@@ -410,8 +421,8 @@ public class EntityController<T> implements Initializable, Configurable {
                 Field field =
                         fieldArray[i];
                 Class clazz = ClassUtil.loadClassFromCollectionField(field.getName());
-                RecordsIdsTuple recordTuple = getBoundedRecords(clazz, record);
-                if (recordTuple.getRecordList() == null || recordTuple.getRecordList().size() == 0) {
+                DoubleTuple<ArrayList<T>, HashMap<Field, Long>> recordTuple = getBoundedRecords(clazz, record);
+                if (recordTuple.gettField() == null || recordTuple.gettField().size() == 0) {
                     return false;
                 }
             }
@@ -427,6 +438,7 @@ public class EntityController<T> implements Initializable, Configurable {
             TableColumn tableColumn = null;
             String getMethodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
             Class<?> fieldClass = null;
+            Control control = null;
             if (typeName.equals("long")) {
                 tableColumn = new TableColumn<T, Long>(res.getString(fieldName + "Column"));
                 tableColumn.setCellValueFactory(new PropertyValueFactory<T, Long>(fieldName));
@@ -441,7 +453,7 @@ public class EntityController<T> implements Initializable, Configurable {
                     idField.setEditable(false);
                     idField.setPrefSize(100, 25);
                     idField.setText(getStringEntityCounter());
-                    fieldsPane.getChildren().add(idField);
+                    control = idField;
                 } else {
                     Class<?> entityClass = ClassUtil.loadClassFromIdField(fieldName);
                     Method gett = null;
@@ -463,7 +475,7 @@ public class EntityController<T> implements Initializable, Configurable {
                     idComboBox.setEditable(false);
                     idComboBox.setPrefWidth(100);
                     idComboBox.setEditable(true);
-                    fieldsPane.getChildren().add(idComboBox);
+                    control = idComboBox;
                     idClassChoosersMap.put(entityClass, idComboBox);
                     tableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(new StringToLongConverter(), idList));
                     tableColumn.setEditable(true);
@@ -477,7 +489,7 @@ public class EntityController<T> implements Initializable, Configurable {
                 tableColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringToIntegerConverter()));
                 tableColumn.setEditable(true);
                 tableColumn.setPrefWidth(100);
-                fieldsPane.getChildren().add(createStandardTextField(tableColumn.getText()));
+                control = (createStandardTextField(tableColumn.getText()));
             } else {
                 if (typeName.equals("float")) {
                     fieldClass = Float.class;
@@ -487,7 +499,7 @@ public class EntityController<T> implements Initializable, Configurable {
                     tableColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringToFloatConverter()));
                     tableColumn.setEditable(true);
                     tableColumn.setPrefWidth(100);
-                    fieldsPane.getChildren().add(createStandardTextField(tableColumn.getText()));
+                    control = (createStandardTextField(tableColumn.getText()));
                 } else if (typeName.equalsIgnoreCase("double")) {
                     fieldClass = Double.class;
                     typeList.add(Double.class);
@@ -496,7 +508,7 @@ public class EntityController<T> implements Initializable, Configurable {
                     tableColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringToDoubleConverter()));
                     tableColumn.setEditable(true);
                     tableColumn.setPrefWidth(100);
-                    fieldsPane.getChildren().add(createStandardTextField(tableColumn.getText()));
+                    control = (createStandardTextField(tableColumn.getText()));
                 } else {
                     if (typeName.equalsIgnoreCase("string")) {
                         fieldClass = String.class;
@@ -507,7 +519,7 @@ public class EntityController<T> implements Initializable, Configurable {
                         tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
                         tableColumn.setEditable(true);
                         tableColumn.setPrefWidth(100);
-                        fieldsPane.getChildren().add(createStandardTextField(tableColumn.getText()));
+                        control = (createStandardTextField(tableColumn.getText()));
                     } else if (typeName.equalsIgnoreCase("timestamp")) {
                         fieldClass = Timestamp.class;
                         typeList.add(Timestamp.class);
@@ -537,8 +549,8 @@ public class EntityController<T> implements Initializable, Configurable {
                         calendarTextField.setAllowNull(false);
                         calendarTextField.setShowTime(true);
                         calendarTextField.setPrefWidth(250);
-                        calendarTextField.setDateFormat(new SimpleDateFormat("dd.MM.yyyy hh:mm"));
-                        fieldsPane.getChildren().add(calendarTextField);
+                        calendarTextField.setDateFormat(new SimpleDateFormat("dd.MM.yyyy HH:mm"));
+                        control = (calendarTextField);
                     } else if (typeName.equalsIgnoreCase("date")) {
                         fieldClass = java.sql.Date.class;
                         typeList.add(java.sql.Date.class);
@@ -569,7 +581,7 @@ public class EntityController<T> implements Initializable, Configurable {
                         calendarTextField.setShowTime(false);
                         calendarTextField.setPrefWidth(150);
                         calendarTextField.setDateFormat(new SimpleDateFormat("dd.MM.yyyy"));
-                        fieldsPane.getChildren().add(calendarTextField);
+                        control = (calendarTextField);
                     } else {
                         if (typeName.equals("boolean")) {
                             fieldClass = Boolean.class;
@@ -582,7 +594,7 @@ public class EntityController<T> implements Initializable, Configurable {
                             CheckBox booleanField = new CheckBox(tableColumn.getText());
                             booleanField.setSelected(true);
                             booleanField.setPrefWidth(80);
-                            fieldsPane.getChildren().add(booleanField);
+                            control = (booleanField);
                         }
                     }
                 }
@@ -600,11 +612,15 @@ public class EntityController<T> implements Initializable, Configurable {
                         e.printStackTrace();
                     }
                     setter.setAccessible(true);
+                    T record = (T) event.getRowValue();
+                    if (event.getNewValue() == null) {
+                        table.refresh();
+                        return;
+                    }
                     ConfirmationAlert alert = new
                             ConfirmationAlert("confirmationUpdateRecordContentText");
                     Optional<ButtonType> result = alert.showAndWait();
                     if (result.get().getButtonData() == ButtonBar.ButtonData.YES) {
-                        T record = (T) event.getRowValue();
                         try {
                             setter.invoke(record, finalFieldClass.cast(event.getNewValue()));
                         }
@@ -619,13 +635,20 @@ public class EntityController<T> implements Initializable, Configurable {
                     }
                 }
             });
+            control.setMinWidth(5);
+            TableColumn finalTableColumn = tableColumn;
+            Control finalControl = control;
+            tableColumn.widthProperty().addListener(e -> {
+                finalControl.prefWidthProperty().setValue(finalTableColumn.getWidth());
+            });
+            fieldContainer.getChildren().add(control);
             columns.add(tableColumn);
         });
 
     }
 
     private T createNewRecord() {
-        ObservableList<Node> list = fieldsPane.getChildren();
+        ObservableList<Node> list = fieldContainer.getChildren();
         T newRecord = null;
         try {
             newRecord = cl.newInstance();
@@ -812,7 +835,6 @@ public class EntityController<T> implements Initializable, Configurable {
 
     private void showEntity() {
         Scene scene = new Scene(root);
-        Stage stage = new Stage();
         stage.setTitle(Main.getResLan().getString(ClassUtil.getSimpleLowerCaseClassName(cl)));
         stage.getIcons().add(new Image("images/documentIcon.png"));
         stage.setScene(scene);
@@ -834,6 +856,7 @@ public class EntityController<T> implements Initializable, Configurable {
 
     protected <S> void shutDownParsing(Node field, Class fieldClass) {
         field.setStyle("-fx-border-color: red");
+        field.requestFocus();
         ErrorParsingAlert errorParsingAlert = new ErrorParsingAlert(fieldClass.getSimpleName() + "ErrorParsingText", fieldClass.getSimpleName() + "ErrorParsingHeader");
     }
 
@@ -904,36 +927,36 @@ public class EntityController<T> implements Initializable, Configurable {
                             Long l = -1l;
                             try {
                                 l = (Long) field.get(entity);
+                                if (l != null && Long.toString(l).contains(newValue)) {
+                                    return true;
+                                }
                             }
                             catch (IllegalAccessException e1) {
                                 e1.printStackTrace();
-                            }
-                            if (l != null && Long.toString(l).contains(newValue)) {
-                                return true;
                             }
                         }
                         if (type.startsWith("int")) {
                             Integer i = -1;
                             try {
                                 i = (Integer) field.get(entity);
+                                if (i != null && Integer.toString(i).contains(newValue)) {
+                                    return true;
+                                }
                             }
                             catch (IllegalAccessException e1) {
                                 e1.printStackTrace();
-                            }
-                            if (i != -1 && Integer.toString(i).contains(newValue)) {
-                                return true;
                             }
                         }
                         if (type.equals("double")) {
                             Double d = -1d;
                             try {
                                 d = (Double) field.get(entity);
+                                if (d != null && Double.toString(d).contains(newValue)) {
+                                    return true;
+                                }
                             }
                             catch (IllegalAccessException e1) {
                                 e1.printStackTrace();
-                            }
-                            if (d != -1d && Double.toString(d).contains(newValue)) {
-                                return true;
                             }
                         }
                         if (type.equals("string")) {
@@ -975,9 +998,9 @@ public class EntityController<T> implements Initializable, Configurable {
                             }
                         }
                         if (type.equals("boolean")) {
-                            boolean b = false;
+                            Boolean b = false;
                             try {
-                                b = field.getBoolean(entity);
+                                b = ((Boolean) field.get(entity));
                             }
                             catch (IllegalAccessException e1) {
                                 e1.printStackTrace();
@@ -1018,9 +1041,41 @@ public class EntityController<T> implements Initializable, Configurable {
     }
 
     @Override
-    public void configureNavigationBar(BorderPane pane) {
+    public <E> void configureNavigationBar(BorderPane pane) {
+        Text accessableTablesText = new Text(res.getString("accessableTablesText"));
+        ListView<String> tableList = new ListView();
+        DoubleTuple<List<String>, List<String>> items = getTablesNames();
+        tableList.getItems().addAll(items.gettField());
+        tableList.setEditable(false);
+        tableList.setOnMousePressed(e -> {
+            if (tableList.getSelectionModel().getSelectedItem() != null) {
+                try {
+                    new EntityController<E>(ClassUtil.loadClassFromEntityName(items.getwFiels().get(tableList.getSelectionModel().getSelectedIndex())));
+                }
+                catch (ClassNotFoundException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
         BorderPane navigationBar = new BorderPane();
-
+        VBox vbox = new VBox(accessableTablesText, tableList);
+        String showNavigationBarText = (res.getString("showNavigationBarText"));
+        Menu toolsMenu = new Menu(res.getString("menuView"));
+        RadioMenuItem hideOption = new RadioMenuItem(showNavigationBarText);
+        hideOption.setSelected(true);
+        hideOption.setOnAction(e -> {
+            if (hideOption.isSelected()) {
+                navigationBar.setCenter(vbox);
+                navigationBar.setPrefWidth(200);
+            } else {
+                navigationBar.getChildren().remove(vbox);
+                navigationBar.setPrefWidth(0);
+            }
+        });
+        navigationBar.setCenter(vbox);
+        pane.setLeft(navigationBar);
+        toolsMenu.getItems().add(hideOption);
+        getMainMenu().getMenus().add(toolsMenu);
     }
 
     @Override

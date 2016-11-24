@@ -1,6 +1,6 @@
 package com.boyarskycompany.src.controllers.converters;
 
-import javafx.scene.control.Alert;
+import com.boyarskycompany.src.controllers.util.alerts.ErrorParsingAlert;
 import javafx.util.StringConverter;
 
 /**
@@ -19,13 +19,12 @@ public class StringToFloatConverter extends StringConverter<Float> {
         if (string == null || string.length() == 0 || string.isEmpty()) {
             return null;
         }
-        Float f = -1f;
+        Float f = null;
         try {
             f = Float.parseFloat(string);
         }
         catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.show();
+            new ErrorParsingAlert("FloatErrorParsingText", "FloatErrorParsingHeader");
         }
         return f;
     }

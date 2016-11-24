@@ -1,4 +1,4 @@
-package com.boyarskycompany.src.controllers.entities.util;
+package com.boyarskycompany.src.controllers.util;
 
 /**
  * Created by zatov on 06.11.2016.

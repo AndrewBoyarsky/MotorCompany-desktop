@@ -1,4 +1,4 @@
-package com.boyarskycompany.src.controllers.entities.util.alerts;
+package com.boyarskycompany.src.controllers.util.alerts;
 
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -16,6 +16,5 @@ public class ConfirmationAlert extends AbstractAlert {
     public ConfirmationAlert() {
         this("");
     }
-
 
 }

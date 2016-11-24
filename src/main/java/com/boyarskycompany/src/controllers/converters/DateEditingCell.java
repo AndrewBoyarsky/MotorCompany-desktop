@@ -31,7 +31,7 @@ public class DateEditingCell<T> extends TableCell<T, Date> {
     public void cancelEdit() {
         super.cancelEdit();
 
-        setText(getDate().toString());
+        setText(getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
         setGraphic(null);
     }
 

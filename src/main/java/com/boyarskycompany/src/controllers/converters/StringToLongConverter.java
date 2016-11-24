@@ -1,6 +1,6 @@
 package com.boyarskycompany.src.controllers.converters;
 
-import javafx.scene.control.Alert;
+import com.boyarskycompany.src.controllers.util.alerts.ErrorParsingAlert;
 import javafx.util.StringConverter;
 
 /**
@@ -21,12 +21,11 @@ public class StringToLongConverter extends StringConverter<Long> {
         if (string == null || string.length() == 0 || string.isEmpty()) {
             return null;
         }
-        Long aLong = -1l;
+        Long aLong = null;
         try {
             aLong = Long.parseLong(string);
         } catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.show();
+            new ErrorParsingAlert("LongErrorParsingText", "LongErrorParsingHeader");
         }
         return aLong;
     }

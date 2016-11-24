@@ -1,4 +1,4 @@
-package com.boyarskycompany.src.controllers.entities.util;
+package com.boyarskycompany.src.controllers.util;
 
 import javafx.stage.Stage;
 
@@ -6,11 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StageRegister {
-        private static List<Stage> openedStages = new ArrayList<>();
+    private static List<Stage> openedStages = new ArrayList<>();
         public static void register(Stage stage) {
             openedStages.add(stage);
             stage.setOnCloseRequest(e -> {
-                stage.close();
                 openedStages.remove(stage);
             });
         }
@@ -20,6 +19,9 @@ public class StageRegister {
     }
 
     public static void closeStages() {
-        openedStages.forEach(stage -> stage.close());
+        openedStages.forEach(stage -> {
+            stage.close();
+        });
     }
+
 }

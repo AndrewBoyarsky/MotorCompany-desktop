@@ -20,7 +20,7 @@ public class StringToTimestampConverter extends StringConverter<Timestamp> {
     @Override
     public Timestamp fromString(String string) {
         try {
-            return new Timestamp(new SimpleDateFormat("dd.MM.yyyy").parse(string).getTime());
+            return new Timestamp(new SimpleDateFormat("dd.MM.yyyy HH:mm").parse(string).getTime());
         }
         catch (ParseException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

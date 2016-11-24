@@ -1,5 +1,6 @@
 package com.boyarskycompany.src.controllers.converters;
 
+import com.boyarskycompany.src.controllers.util.alerts.ErrorParsingAlert;
 import javafx.util.StringConverter;
 
 /**
@@ -8,11 +9,24 @@ import javafx.util.StringConverter;
 public class StringToBooleanConverter extends StringConverter<Boolean> {
     @Override
     public String toString(Boolean object) {
-        return Boolean.toString(object);
+        if (Boolean.toString(object).equals("true")) {
+            return "+";
+        } else if (Boolean.toString(object).equals("false")) {
+            return "-";
+        }
+        return "";
     }
 
     @Override
     public Boolean fromString(String string) {
-        return Boolean.parseBoolean(string);
+        Boolean b = null;
+        if (string.equals("+")) {
+            b = true;
+        } else if (string.equals("-")) {
+            b = false;
+        } else {
+            new ErrorParsingAlert("BooleanErrorParsingText", "BooleanErrorParsingHeader");
+        }
+        return b;
     }
 }

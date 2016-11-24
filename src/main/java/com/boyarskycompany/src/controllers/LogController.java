@@ -1,6 +1,5 @@
 package com.boyarskycompany.src.controllers;
 
-import com.boyarskycompany.src.controllers.database.HibernateUtil;
 import com.boyarskycompany.src.privacy.UserBean;
 import com.boyarskycompany.src.privacy.Users;
 import com.boyarskycompany.src.run.Main;
@@ -20,7 +19,7 @@ import java.util.ResourceBundle;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import static com.boyarskycompany.src.privacy.Users.isValide;
+import static com.boyarskycompany.src.privacy.Users.isValid;
 
 
 /**
@@ -51,21 +50,25 @@ public class LogController implements Initializable {
     private void handleLoginButton() throws IOException, SQLException {
         UserBean user = new UserBean(userField.getText(), passwordField.getText());
 
-        if (isValide(user)) {
+        if (isValid(user)) {
             currentUser = user;
             infField.setVisible(false);
-            Main.getPrStg().setScene(new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("fxml/connecting.fxml"), Main.getResLan())));
+            Main.getPrStg().close();
+            Main.getLoadStage().setScene(new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("fxml/connectingScene.fxml"), Main.getResLan())));
+            Main.getLoadStage().show();
             Thread thread;
             Task task = new Task() {
                 @Override
                 protected Void call() throws Exception {
-                    HibernateUtil.connect();
+                    Class.forName("com.boyarskycompany.src.controllers.database.HibernateUtil");
                     return null;
                 }
             };
             task.setOnSucceeded(handler -> {
                 try {
+                    Main.getLoadStage().close();
                     Main.getPrStg().setScene(new Scene(FXMLLoader.load(getClass().getClassLoader().getResource("fxml/mainScene.fxml"), Main.getResLan())));
+                    Main.getPrStg().show();
                 }
                 catch (IOException e) {
                     e.printStackTrace();
