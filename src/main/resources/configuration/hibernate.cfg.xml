@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">
+      org.hibernate.dialect.MySQLDialect
+    </property>
+    <property name="hibernate.connection.driver_class">
+      com.mysql.jdbc.Driver
+    </property>
+    <!--<property name="hibernate.connection.url">-->
+      <!--jdbc:mysql://localhost:3306/mcis_db-->
+    <!--</property>-->
+    <!--<property name="hibernate.connection.password">root</property>-->
+    <!--<property name="hibernate.connection.username">root</property>-->
+    <property name="hibernate.archive.autodetection">class</property>
+    <!--<property name="hibernate.default_schema">mcis_db</property>-->
+    <mapping class="com.boyarskycompany.mcis.entities.AgreementEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.BidEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.BidEntityPK"/>
+    <mapping class="com.boyarskycompany.mcis.entities.BidtranspmapEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.BidtranspmapEntityPK"/>
+    <mapping class="com.boyarskycompany.mcis.entities.CargoEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.CargoEntityPK"/>
+    <mapping class="com.boyarskycompany.mcis.entities.DriverjobEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.DriverjobEntityPK"/>
+    <mapping class="com.boyarskycompany.mcis.entities.DriverEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.ProvidedserviceEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.ProvidedserviceEntityPK"/>
+    <mapping class="com.boyarskycompany.mcis.entities.RoadlistEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.RoadlistEntityPK"/>
+    <mapping class="com.boyarskycompany.mcis.entities.TotalbillEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.TotalbillEntityPK"/>
+    <mapping class="com.boyarskycompany.mcis.entities.TranspmapdriversEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.TranspmapdriversEntityPK"/>
+    <mapping class="com.boyarskycompany.mcis.entities.TranspmapEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.TranspmaptransportEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.TranspmaptransportEntityPK"/>
+    <mapping class="com.boyarskycompany.mcis.entities.TransportEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.VariabledayplandriversEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.VariabledayplandriversEntityPK"/>
+    <mapping class="com.boyarskycompany.mcis.entities.VariabledayplanEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.VariabledayplanEntityPK"/>
+    <mapping class="com.boyarskycompany.mcis.entities.WaybillEntity"/>
+    <mapping class="com.boyarskycompany.mcis.entities.WaybillEntityPK"/>
+  </session-factory>
+</hibernate-configuration>
